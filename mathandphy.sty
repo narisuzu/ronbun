@@ -1,0 +1,48 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathandphy}[2020/10/04 Math and Phy]
+
+\RequirePackage{amsmath}
+\RequirePackage{amsthm}
+\RequirePackage{amssymb}
+\RequirePackage{color}
+\RequirePackage{latexsym}
+\RequirePackage{esint}
+\RequirePackage{bm}
+\RequirePackage{ulem}
+%\RequirePackage[bold-style=ISO]{unicode-math}
+%\RequirePackage{emoji}
+
+%行距設定
+\linespread{1.5}
+
+%微分算子
+\newcommand*{\dif}{\mathop{}\!\mathrm{d}}
+
+% 題解と証明
+\newenvironment{solve}{\begin{proof}[\textbf{解}]}{\end{proof}}
+\renewcommand{\proofname}{\textbf{證明}}
+
+% 問題
+\newtcolorbox[auto counter,number within=]{problem}{%
+  enhanced,
+  colback=white,
+  colframe=black,
+  coltitle=black,
+  boxrule=1pt,
+  sharp corners,
+  attach boxed title to top left={yshift=-0.3\baselineskip-0.4pt,xshift=5mm},
+  boxed title style={tile,size=minimal,left=0.5mm,right=0.5mm,colback=white,before upper=\strut},
+  title= \textbf{問題 \thetcbcounter}
+}
+
+%單位向量
+\newcommand*{\vu}[1]{\hat{\mathbf{#1}}}
+
+%向量
+\newcommand*{\va}[1]{\mathbf{#1}}
+
+%單位
+\newcommand*{\unit}[1]{\mathrm{#1}}
+
+%模長
+\newcommand*{\norm}[1]{\left\|#1\right\|}

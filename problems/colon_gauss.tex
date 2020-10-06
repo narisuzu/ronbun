@@ -1,0 +1,75 @@
+\begin{problem}
+庫侖定律和高斯定理互相推導過程
+\begin{align*}
+    \text{庫倫定律：} & \mathbf{E} = \frac{1}{4\pi\varepsilon_0} \frac{q}{r^2} \hat{\mathbf{r}}                                                     \\
+    \text{高斯定理：} & \Phi_{E} = \oiint_{\mathbb{S}} \mathbf{E} \cdot \dif \mathbf{S} = \frac{1}{\varepsilon_0} \sum_{i(\mathbb{S}\text{内})} q_i
+\end{align*}
+
+\end{problem}
+
+\begin{solve}
+    極座標下，對於半徑爲$r$的一球面面元$\dif A$，
+    $$\dif A = (r\sin\theta\dif\varphi)(r\dif\theta)$$
+    可定義極小立體角爲
+    $$\dif\Omega = \frac{\dif A}{r^2} = \sin\theta\dif\theta\dif\varphi$$
+    對於更加普遍的有向面元$\dif\va{S} = \dif S\vu{n}$而言, 可推廣立體角定義爲
+    $$\dif\Omega  = \frac{(\vu{r}\cdot\vu{n})\dif S}{r^2} = \frac{\vu{r}\cdot\vu{n}}{\left\|\vu{r}\cdot\vu{n}\right\|}\sin\theta\dif\theta\dif\varphi$$
+    由立體角的推廣定義，對於任一封閉曲面$\mathbb{S}$所張之立體角也就有所定義了，當頂點在曲面内時, 對於曲面上的任一立體角元$\dif\Omega$，其$\vu{r}$和$\vu{n}$夾角總小於$\pi/2$, 即 $(\vu{r}\cdot\vu{n})/{\left\|\vu{r}\cdot\vu{n}\right\|} \equiv 1$
+    $$
+        \oiint_\mathbb{S} \dif\Omega = \oiint_\mathbb{S} \sin\theta \dif\theta \dif\varphi = \int_0^\pi \sin\theta \dif\theta \int_0^{2\pi} \dif\varphi = [-cos\theta]_0^{\pi} (2\pi)  = 4\pi
+    $$
+    當頂點在曲面外時, 對於曲面上的任一立體角元$\dif\Omega$皆存在一個互爲相反數立體角元$\dif\Omega$, 使得積分結果爲$0$
+    $$
+        \oiint_\mathbb{S} \dif\Omega = 0
+    $$
+    \begin{itemize}
+        \item[1)] 庫倫定律 $\rightarrow$ 高斯定理\\
+              電通量$\Phi_E$乃電場在高斯面各處的法向分量的總和.
+
+              \columnseprule=0.4pt
+              \begin{multicols}{2}
+                  \begin{itemize}
+                      \item[a)] $q$在高斯面内的情況
+                            \begin{align*}
+                                \Phi_E & = \oiint_{\mathbb{S}} \mathbf{E} \cdot \dif \mathbf{S}                                            \\
+                                       & = \oiint_{\mathbb{S}} \frac{1}{4\pi\varepsilon_0} \frac{q}{r^2} \hat{\mathbf{r}} \cdot \dif\va{S} \\
+                                       & = \oiint_{\mathbb{S}} \frac{q}{4\pi\varepsilon_0} \dif\Omega                                      \\
+                                       & = \frac{q}{\varepsilon_0}
+                            \end{align*}
+
+                      \item[b)] $q$在高斯面外的情況
+                            \begin{align*}
+                                \Phi_E & = \oiint_{\mathbb{S}} \mathbf{E} \cdot \dif \mathbf{S}                                            \\
+                                       & = \oiint_{\mathbb{S}} \frac{1}{4\pi\varepsilon_0} \frac{q}{r^2} \hat{\mathbf{r}} \cdot \dif\va{S} \\
+                                       & = \oiint_{\mathbb{S}} \frac{q}{4\pi\varepsilon_0} \dif\Omega                                      \\
+                                       & = 0
+                            \end{align*}
+                  \end{itemize}
+              \end{multicols}
+
+
+              \begin{itemize}
+                  \item[c)] 數個點電荷組成電荷系的情況
+
+                        電荷系可分爲面内和面外兩個部分, 由a)、b)的結論和場強疊加原理得
+                        \begin{align*}
+                            \Phi_E & = \oiint_{\mathbb{S}}\left(\sum_{i(\mathbb{S}\text{内})}\mathbf{E}_i + \sum_{j(\mathbb{S}\text{外})}\mathbf{E}_j\right)\cdot \dif \mathbf{S}                            \\
+                                   & = \sum_{i(\mathbb{S}\text{内})}\oiint_{\mathbb{S}}\mathbf{E}_i\cdot \dif \mathbf{S} + \sum_{j(\mathbb{S}\text{外})}\oiint_{\mathbb{S}}\mathbf{E}_j\cdot \dif \mathbf{S} \\
+                                   & = \sum_{i(\mathbb{S}\text{内})}\frac{q_i}{\varepsilon_0} + \sum_{j(\mathbb{S}\text{外})} 0                                                                              \\
+                                   & = \frac{1}{\varepsilon_0}\sum_{i(\mathbb{S}\text{内})} q_i                                                                                                              \\
+                        \end{align*}
+              \end{itemize}
+
+
+        \item[2)] 高斯定理 $\rightarrow$ 庫倫定律\\
+              設一點電荷$q$, 以其爲球心, $r$爲半徑假設球形高斯面, 則有
+              $$\oiint_{\mathbb{S}} \va{E} \cdot \dif\va{S} = \frac{q}{\varepsilon_0}$$
+              $$\oiint_{\mathbb{S}} \va{E} \cdot \vu{r} \dif S = \frac{q}{\varepsilon_0}$$
+              因爲$\va{E}$和$\vu{r}$處處平行, 場強大小在球面上處處相等, 故
+              $$\va{E} \cdot \vu{r} \oiint_{\mathbb{S}} \dif S = \frac{q}{\varepsilon_0}$$
+              又因爲$\vu{r}^2 = 1$, $\vu{r}$自反, 所以
+              \begin{equation*}
+                  \va{E} = \frac{\vu{r}}{4\pi r^2}\frac{q}{\varepsilon_0} = \frac{1}{4\pi\varepsilon_0}\frac{q}{r^2}\vu{r} \qedhere
+              \end{equation*}
+    \end{itemize}
+\end{solve}

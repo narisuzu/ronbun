@@ -1,0 +1,19 @@
+\begin{problem}
+使用馬克士威方程組(Maxwell's equations)推導光速 $c$.
+$$
+	\begin{cases}
+		 & \nabla \cdot \va{E} = 0                                                       \\
+		 & \nabla \cdot \va{B} = 0                                                       \\
+		 & \nabla \times \va{E} = -\frac{\partial\va{B}}{\partial t}                     \\
+		 & \nabla \times \va{B} = \mu_0\varepsilon_0 \frac{\partial \va{E}} {\partial t}
+	\end{cases}
+$$
+Hint: $\nabla \times (\nabla \times \va{A}) = \nabla(\nabla \cdot \va{A}) - \nabla^2\va{A}$
+\end{problem}
+\begin{solve}
+	\begin{align*}
+		\text{与式} & = \lim_{x \to 0} \frac{\frac{1}{2}(1 - x^2)^{-\frac{1}{2}}(-2x) + 3\sin 3x}{e^x - 1}                                                         \\
+		            & = \lim_{x \to 0} \frac{\frac{1}{2}(-\frac{1}{2})(1 - x^2)^{-\frac{3}{2}}(-2x)^2 + (-2)[\frac{1}{2}(1 - x^2)^{-\frac{1}{2}}] + 9\cos 3x}{e^x} \\
+		            & = 8 \qedhere
+	\end{align*}
+\end{solve}

@@ -1,0 +1,46 @@
+%fig 1
+\begin{figure}[H]
+    \centering %图片居中
+    \begin{tikzpicture}
+        \coordinate (o) at (0,0);
+        \coordinate[label=above left:$-q$] (fu) at (-0.65, 0) {};
+        \coordinate[label=above right:$+q$] (zh) at (0.65, 0) {};
+        \coordinate[label=right:$P'$] (P') at (0, 3.5) {};
+        \coordinate[label=below:$P$] (P) at (2.5, 0) {};
+
+        \draw[thick, black!30] (P') -- (fu);
+        \draw[thick, black!30] (P') -- (zh);
+
+        \draw[-stealth, thick, black!30] (-2,0)--(4,0) node[below, black] {$x$};
+        \draw[-stealth, thick] (0,-1)--(0,5) node[right] {$y$};
+
+        \fill[fill=white, draw=black, thick] (fu) node{$-$} circle [radius = 3pt];
+        \fill[fill=white, draw=black, thick] (zh) node{$+$} circle [radius = 3pt];
+
+        \fill (P) circle[radius=1pt];
+
+        \draw[thick, black!30] ($(P')!-1cm!(zh)$) -- (-0.3714cm, 3.5);
+        \draw[thick, black!30] ($(P')!1cm!(fu)$) -- (-0.3714cm, 3.5);
+
+        \pic [draw, -, "$\theta$", angle radius=0.3cm, angle eccentricity=1.5] {angle = o--fu--P'};
+        \pic [draw, -, "$\theta$", angle radius=0.3cm, angle eccentricity=1.5] {angle = P'--zh--o};
+
+        \draw[thick, -stealth] (P') -- ($(P')!1cm!(fu)$) node[left] {$\mathbf{E}_-$};
+        \draw[thick, -stealth] (P') -- ($(P')!-1cm!(zh)$) node[left] {$\mathbf{E}_+$};
+        \draw[thick, -stealth] (P') -- +(180: 0.3714cm) node[left] {$\mathbf{E}$};
+
+        \draw[thick, -stealth]  (P) -- +(0: 1cm) node[above] {$\mathbf{E}_+$};
+        \draw[thick, -stealth]  (P) -- +(180: 0.6cm) node[above] {$\mathbf{E}_-$};
+        \draw[thick, -stealth]  (P) -- +(0: 0.4cm) node[above] {$\mathbf{E}$};
+
+        \draw[|<->, semithick] (-0.65, -0.3) -- (0, -0.3);
+        \draw[<->|, semithick] (0, -0.3) -- (0.65, -0.3);
+        \draw[<->|, semithick] (0, -0.6) -- (2.5, -0.6);
+        \fill[fill=white] (-0.325, -0.3) node{$\frac{l}{2}$} circle [radius = 3pt];
+        \fill[fill=white] (0.325, -0.3) node{$\frac{l}{2}$} circle [radius = 3pt];
+
+        \fill[fill=white] (1.25, -0.6) node{$r$} circle [radius = 3.5pt];
+        \fill[fill=white] (0, 1.75) node{$r$} circle [radius = 3.5pt];
+    \end{tikzpicture}
+    \caption{電偶極子} %最终文档中希望显示的图片标题
+\end{figure}
