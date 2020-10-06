@@ -3,4 +3,4 @@
 *.synctex.gz
 *.fdb_latexmk
 *.fls
-./*.pdf
+/*.pdf
