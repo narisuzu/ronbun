@@ -1,0 +1,15 @@
+\begin{problem}
+求不定積分
+$$\int \frac{x + 5}{x^2 -6x +13} \dif x$$
+\end{problem}
+
+\begin{solve}
+    \begin{align*}
+        \text{与式} & = \int \frac{x + 5}{x^2 + 2\cdot 3x + 3^2 + 4} \dif x                                                  \\
+                    & = \int \frac{x-3+8}{(x-3)^2 +4} \dif (x-3)                                                             \\
+                    & = \int \frac{x-3}{(x-3)^2+4} \dif (x-3) + 8 \int \frac{1}{(x-3)^2+4} \dif (x-3)                        \\
+                    & = \frac{1}{2} \int \frac{1}{(x-3)^2 + 4} \dif[(x-3)^2 + 4] + 8 \int \frac{1}{(x-3)^2 + 2^2} \dif (x-3) \\
+                    & = \frac{1}{2} \log \left|x^2-6x+13\right| + 8\cdot\frac{1}{2}\arctan\frac{x-3}{2} + C                  \\
+                    & = \frac{1}{2} \log \left(x^2-6x+13\right) + 4\arctan\frac{x-3}{2} + C \qedhere
+    \end{align*}
+\end{solve}
