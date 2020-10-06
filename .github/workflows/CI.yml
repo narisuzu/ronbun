@@ -16,10 +16,6 @@ jobs:
       - name: Compile LaTeX
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: |
-            math.week_1.tex
-            math.week_2.tex
-            em.week_1.tex
           latexmk_use_lualatex: true
           pre_compile: "tlmgr update --all"
 
@@ -27,4 +23,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: PDF
-          path: ./*.pdf
+          path: ./temp/*.pdf
