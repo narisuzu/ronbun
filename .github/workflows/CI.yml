@@ -16,15 +16,15 @@ jobs:
       - name: Compile LaTeX
         uses: xu-cheng/latex-action@v2
         with:
+          latexmk_use_lualatex: true
+          pre_compile: "tlmgr update --all"
           root_file: |
             em.week_1.tex
             math.week_1.tex
             math.week_2.tex
-          latexmk_use_lualatex: true
-          pre_compile: "tlmgr update --all"
 
       - name: upload to workflow
         uses: actions/upload-artifact@v2
         with:
           name: PDF
-          path: ./temp/*.pdf
+          path: ./*.pdf
