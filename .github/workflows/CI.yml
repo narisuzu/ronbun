@@ -23,6 +23,7 @@ jobs:
         with:
           root_file: main.tex
           latexmk_use_lualatex: true
+          pre_compile: "tlmgr update --all"
 
       - uses: actions/upload-artifact@v2
         with:
