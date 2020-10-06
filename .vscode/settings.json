@@ -8,7 +8,7 @@
         "-file-line-error",
         "--halt-on-error",
         "-interaction=nonstopmode",
-        "-output-directory=out",
+        "-output-directory=%OUTDIR%",
         "%DOCFILE%"
       ]
     },
@@ -25,6 +25,6 @@
     }
   ],
   "latex-workshop.view.pdf.viewer": "tab",
-  "latex-workshop.latex.outDir": "%DIR%/out",
+  "latex-workshop.latex.outDir": "%DIR%/../out",
   "latex-workshop.synctex.afterBuild.enabled": true
 }
