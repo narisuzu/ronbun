@@ -20,7 +20,6 @@ jobs:
             em.week_1.tex
             math.week_1.tex
             math.week_2.tex
-          latexmk_use_lualatex: true
           pre_compile: "tlmgr update --all"
 
       - name: upload to workflow
