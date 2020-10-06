@@ -16,6 +16,7 @@ jobs:
       - name: Compile LaTeX
         uses: xu-cheng/latex-action@v2
         with:
+          root_file: ./*.tex
           latexmk_use_lualatex: true
           pre_compile: "tlmgr update --all"
 
