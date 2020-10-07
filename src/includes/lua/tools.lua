@@ -1,6 +1,6 @@
 -- trim
 function trim(s)
-    return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+    return (s:gsub( "^%s*(.-)%s*$", "%1"))
 end
 
 -- local file = io.open("kkkkkkkk.txt", "a")
@@ -13,14 +13,14 @@ function input_fill(dir)
     for file in lfs.dir(dir) do
         local fullpath = dir .."/".. file
         local modeAttr = lfs.attributes(fullpath, "mode")
-        local extension = string.sub(file,#file-3,#file)
+        local extension = file:sub(#file-3,#file)
         if modeAttr == "file" and extension == ".tex" then
             local line = io.open(fullpath, "r"):read()
-            local str = string.upper(trim(line))
-            local eq = string.find(str, "=")
+            local str = trim(line):upper()
+            local eq = str:find("=")
             if eq ~= nil then
-                local suji = tonumber(trim(string.sub(str, eq + 1, #str)))
-                if string.match(str, "%!ORDER") ~= nil and eq ~= nil and suji ~= nil then
+                local suji = tonumber(trim(str:sub(eq + 1, #str)))
+                if str:sub(1,1) == "%" and str:match("!ORDER") ~= nil and eq ~= nil and suji ~= nil then
                     jb[suji] = fullpath
                 end
             else
