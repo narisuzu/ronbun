@@ -2,12 +2,13 @@
 \ProvidesPackage{includes/mathandphy}[2020/10/04 Math and Phy]
 
 \RequirePackage{luatexja}
+\RequirePackage{luatexja-adjust}
 \RequirePackage{amsmath}
+\RequirePackage{leading}
 \RequirePackage{amsthm}
 \RequirePackage{amssymb}
 \RequirePackage{color}
 \RequirePackage{latexsym}
-\RequirePackage{esint}
 \RequirePackage{ulem}
 \RequirePackage{bm}
 \RequirePackage{tikz}
@@ -18,11 +19,18 @@
 \RequirePackage{float} %设置图片浮动位置的宏包
 \RequirePackage{subfigure} %插入多图时用子图显示的宏包
 \RequirePackage{multicol}
-%\RequirePackage[bold-style=ISO]{unicode-math}
-%\RequirePackage{emoji}
+\RequirePackage[math-style=ISO]{unicode-math}
+\RequirePackage{emoji}
+\setmathfont{Latin Modern Math}
+
+%行内公式行距调整
+\ltjenableadjust[linestep]
+
+%ell 在默认字形上没有定义
+\setmathfont[range={"2113-"2113}]{New Computer Modern Math}
 
 %行距設定
-%\linespread{1.5}
+\leading{1.7em}
 
 %微分算子
 \newcommand*{\dif}{\mathop{}\!\mathrm{d}}
@@ -45,13 +53,18 @@
 }
 
 %單位向量
-\newcommand*{\vu}[1]{\hat{\mathbf{#1}}}
+\newcommand*{\vu}[1]{\hat{\symbf{#1}}}
 
 %向量
-\newcommand*{\va}[1]{\mathbf{#1}}
+\newcommand*{\va}[1]{\symbf{#1}}
 
 %單位
-\newcommand*{\unit}[1]{\mathrm{#1}}
+\newcommand*{\unit}[1]{\symrm{#1}}
 
 %模長
 \newcommand*{\norm}[1]{\left\|#1\right\|}
+
+%常量
+\newcommand*{\ce}{\symrm{e}}
+\newcommand*{\ci}{\symrm{i}}
+\newcommand*{\cj}{\symrm{j}}
