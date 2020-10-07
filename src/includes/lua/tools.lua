@@ -6,6 +6,28 @@ end
 -- local file = io.open("kkkkkkkk.txt", "a")
 -- io.output(file)
 
+-- 檢查參數 %!KEY = VALUE
+-- 某一行, 鍵, 函數(參數), 無參函數
+function check_para(file, key, fn, fn_nopara)
+    for l in file:lines() do
+        local str = trim(l)
+        -- 必須是註釋且有要求的key
+        if str:sub(1,1) == "%" and str:match("!"..key) ~= nil then
+            local eq = str:find("=") --必須有等號
+            if eq ~= nil then
+                local para = trim(str:sub(eq + 1, #str)) --等號後的是參數
+                if para ~= nil then
+                    fn(para)
+                end
+            else -- 沒等號視爲無參數
+                fn_nopara()
+            end
+        elseif str:sub(1,1) == "\\" then -- 進入正文直接退出
+            break
+        end
+    end
+end
+
 -- 獲取順序
 function input_fill(dir)
     local lfs = require "lfs"
@@ -15,17 +37,20 @@ function input_fill(dir)
         local modeAttr = lfs.attributes(fullpath, "mode")
         local extension = file:sub(#file-3,#file)
         if modeAttr == "file" and extension == ".tex" then
-            local line = io.open(fullpath, "r"):read()
-            local str = trim(line):upper()
-            local eq = str:find("=")
-            if eq ~= nil then
-                local suji = tonumber(trim(str:sub(eq + 1, #str)))
-                if str:sub(1,1) == "%" and str:match("!ORDER") ~= nil and eq ~= nil and suji ~= nil then
-                    jb[suji] = fullpath
+            local file = io.open(fullpath, "r")
+            check_para(file, "ORDER", 
+                function(par)
+                    local num = tonumber(par)
+                    if num ~= nil then
+                        jb[num] = fullpath
+                    else
+                        jb[par] = fullpath
+                    end
+                end, 
+                function()
+                    table.insert(jb, fullpath)
                 end
-            else
-                table.insert(jb, fullpath)
-            end
+            )
         end
     end
 
