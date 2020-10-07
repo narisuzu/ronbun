@@ -6,12 +6,12 @@ $$\lim_{x \to 0} \frac{e^{\tan x} - e^x}{x - \sin x}$$
 \begin{solve}
     Maclaurin Expansion: $e^{\tan x} = 1 + \tan x + o(\tan x)$, $e^x = 1 + x + o(x)$.
     \begin{align*}
-        \text{与式} & = \lim_{x \to 0} \frac{1 + \tan x + o(\tan x) - 1 - x - o(x)}{x - \sin x} \\
-                    & = \lim_{x \to 0} \frac{\tan x - x + o(x)}{x - \sin x}                     \\
-                    & = \lim_{x \to 0} \frac{\tan x - x}{x - \sin x}                            \\
-                    & = \lim_{x \to 0} \frac{1 + \tan^2 x - 1}{1 - \cos x}                      \\
-                    & = \lim_{x \to 0} \frac{2 \tan x \sec^2 x}{\sin x}                         \\
-                    & = \lim_{x \to 0} \frac{2}{\cos x}                                         \\
-                    & = 2 \qedhere
+        与式 & = \lim_{x \to 0} \frac{1 + \tan x + o(\tan x) - 1 - x - o(x)}{x - \sin x} \\
+             & = \lim_{x \to 0} \frac{\tan x - x + o(x)}{x - \sin x}                     \\
+             & = \lim_{x \to 0} \frac{\tan x - x}{x - \sin x}                            \\
+             & = \lim_{x \to 0} \frac{1 + \tan^2 x - 1}{1 - \cos x}                      \\
+             & = \lim_{x \to 0} \frac{2 \tan x \sec^2 x}{\sin x}                         \\
+             & = \lim_{x \to 0} \frac{2}{\cos x}                                         \\
+             & = 2 \qedhere
     \end{align*}
 \end{solve}

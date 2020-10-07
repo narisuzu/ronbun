@@ -1,0 +1,13 @@
+\documentclass[9pt]{ltjsbook}
+\usepackage{includes/mathandphy}
+
+\begin{document}
+
+\hrulefill
+
+\directlua{
+    dofile("includes/include.lua")
+    inputAll("math")
+}
+
+\end{document}
