@@ -6,17 +6,15 @@
 \begin{solve}
     設 $(\vu{i},\vu{j},\vu{k})$ 是 $\mathbb{R}^3$ 的標準基.
     \begin{itemize}
-        \item[1)]對於延長線上的$P$點
-              \begin{align*}
-                  \va{E}_+ & = \frac{1}{4\pi\varepsilon_0}\frac{q}{\left(r - \frac{l}{2}\right)^2} \vu{i}  \\
-                  \va{E}_- & = \frac{1}{4\pi\varepsilon_0}\frac{-q}{\left(r + \frac{l}{2}\right)^2} \vu{i}
-              \end{align*}
+        \item[\textbf{1)}]\textbf{對於延長線上的$P$點}
+              $$\va{E}_+ = \frac{1}{4\pi\varepsilon_0}\frac{q}{\left(r - \dfrac{l}{2}\right)^2} \vu{i}$$
+              $$\va{E}_- = \frac{1}{4\pi\varepsilon_0}\frac{-q}{\left(r + \dfrac{l}{2}\right)^2} \vu{i}$$
               因此
               \begin{align*}
                   \va{E} = \va{E}_+ + \va{E}_-
-                   & = \frac{1}{4\pi\varepsilon_0}\left[\frac{q}{\left(r-\frac{l}{2}\right)^2}-\frac{q}{\left(r+\frac{l}{2}\right)^2}\right]\vu{i}      \\
-                   & = \frac{q}{4\pi\varepsilon_0r^2}\left[\frac{1}{\left(1-\frac{l}{2r}\right)^2}-\frac{1}{\left(1+\frac{l}{2r}\right)^2}\right]\vu{i} \\
-                   & \approx \frac{q}{4\pi\varepsilon_0r^2} \left(1+\frac{l}{r} - 1 + \frac{l}{r}\right) \vu{i}                                         \\
+                   & = \frac{1}{4\pi\varepsilon_0}\left[\frac{q}{\left(r-\dfrac{l}{2}\right)^2}-\frac{q}{\left(r+\dfrac{l}{2}\right)^2}\right]\vu{i}      \\
+                   & = \frac{q}{4\pi\varepsilon_0r^2}\left[\frac{1}{\left(1-\dfrac{l}{2r}\right)^2}-\frac{1}{\left(1+\dfrac{l}{2r}\right)^2}\right]\vu{i} \\
+                   & \approx \frac{q}{4\pi\varepsilon_0r^2} \left(1+\frac{l}{r} - 1 + \frac{l}{r}\right) \vu{i}                                           \\
                    & = \frac{2ql}{4\pi\varepsilon_0r^3}\vu{i}
               \end{align*}
               定義 $\va{l} = -l\vu{i}$ 及電偶極距矢量 $\va{p} = q\va{l}$
@@ -24,19 +22,20 @@
                   \va{E} \approx -\frac{1}{4\pi\varepsilon_0}\frac{2\va{p}}{r^3}
               $$
 
-        \item[2)]對於中軸線上的$P'$點
+        \item[\textbf{2)}]\textbf{對於中軸線上的$P'$點}
               \begin{align*}
-                  \va{E}_+ & = \frac{1}{4\pi\varepsilon_0}\frac{q}{r^2 + \frac{l^2}{4}}(-\cos \theta \vu{i} + \sin \theta \vu{j}) \\
-                  \va{E}_- & = \frac{1}{4\pi\varepsilon_0}\frac{-q}{r^2 + \frac{l^2}{4}}(\cos \theta \vu{i} + \sin \theta \vu{j})
+                  \va{E}_+ & = \frac{1}{4\pi\varepsilon_0}\frac{q}{r^2 + \dfrac{l^2}{4}}(-\cos \theta \vu{i} + \sin \theta \vu{j}) \\
+                  \va{E}_- & = \frac{1}{4\pi\varepsilon_0}\frac{-q}{r^2 + \dfrac{l^2}{4}}(\cos \theta \vu{i} + \sin \theta \vu{j})
               \end{align*}
               所以
               \begin{align*}
-                  \va{E} = \va{E}_{+} + \va{E}_{-} & = -2\frac{1}{4\pi\varepsilon_0}\frac{q}{r^2 + \frac{l^2}{4}}\cos \theta \vu{i}                                   \\
-                                                   & = -\frac{1}{2\pi\varepsilon_0}\frac{q}{r^2 + \frac{l^2}{4}}\frac{\frac{l}{2}}{\sqrt{r^2 + \frac{l^2}{4}}} \vu{i} \\
-                                                   & = -\frac{1}{4\pi\varepsilon_0}\frac{ql}{\left(r^2 + \frac{l^2}{4}\right)^{3/2}} \vu{i}                           \\
-                                                   & = -\frac{1}{4\pi\varepsilon_0}\frac{ql}{r^3\left(1 + \frac{l^2}{4r^2}\right)^{3/2}} \vu{i}
+                  \va{E} & = \va{E}_{+} + \va{E}_{-}                                                                                           \\
+                         & = -2\frac{1}{4\pi\varepsilon_0}\frac{q}{r^2 + \dfrac{l^2}{4}}\cos\theta \vu{i}                                      \\
+                         & = -\frac{1}{2\pi\varepsilon_0}\frac{q}{r^2 + \dfrac{l^2}{4}}\frac{\dfrac{l}{2}}{\sqrt{r^2 + \dfrac{l^2}{4}}} \vu{i} \\
+                         & = -\frac{1}{4\pi\varepsilon_0}\frac{ql}{\left(r^2 + \dfrac{l^2}{4}\right)^{3/2}} \vu{i}                             \\
+                         & = -\frac{1}{4\pi\varepsilon_0}\frac{ql}{r^3\left(1 + \dfrac{l^2}{4r^2}\right)^{3/2}} \vu{i}
               \end{align*}
-              因爲 $r \gg \frac{l}{2}$, $\left(1 + \frac{l^2}{4r^2}\right)^{3/2} \approx 1$, 又可以定義 $\va{l} = -l\vu{i}$ 及電偶極距矢量 $\va{p} = q\va{l}$,
+              因爲 $r \gg \dfrac{l}{2}$, $\left(1 + \dfrac{l^2}{4r^2}\right)^{3/2} \approx 1$, 又可以定義 $\va{l} = -l\vu{i}$ 及電偶極距矢量 $\va{p} = q\va{l}$,
               \begin{equation*}
                   \va{E} \approx \frac{1}{4\pi\varepsilon_0}\frac{\va{p}}{r^3} \qedhere
               \end{equation*}
