@@ -8,10 +8,10 @@
     \noindent \textbf{\luaexec{
         dofile("includes/lua/subject.lua")
         tex.sprint(subject_table.#1)
-    }
+    }}
     \ \luaexec{
         tex.sprint(string.upper("#2"))
-    }} \hfill Homework \#\\
+    } \hfill Homework \#\\
     Satanya@張睿 (\today)
     
     \noindent\hrulefill
