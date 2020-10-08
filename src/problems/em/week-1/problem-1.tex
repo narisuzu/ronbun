@@ -1,0 +1,45 @@
+% !ORDER = 1
+
+\begin{problem}
+求解電偶極子軸線和中垂面上的電場強度
+\input{figures/electric_dipole_fig}
+\end{problem}
+
+\begin{solve}
+    設$\vi,\vj,\vk$ 是 $\BbbR^3$ 的標準正交基.
+    \begin{itemize}
+        \item[\textbf{1)}]\textbf{對於延長線上的$P$點}
+              $$\vE_+ = \frac{1}{4\pi\eo}\frac{+q}{\left(r - \dfrac{l}{2}\right)^2} \vi$$
+              $$\vE_- = \frac{1}{4\pi\eo}\frac{-q}{\left(r + \dfrac{l}{2}\right)^2} \vi$$
+              因此
+              \begin{align*}
+                  \vE = \vE_+ + \vE_-
+                   & = \frac{1}{4\pi\eo}\left[\frac{q}{\left(r-\dfrac{l}{2}\right)^2}-\frac{q}{\left(r+\dfrac{l}{2}\right)^2}\right]\vi       \\
+                   & = \frac{q}{4\pi\eo r^2}\left[\frac{1}{\left(1-\dfrac{l}{2r}\right)^2}-\frac{1}{\left(1+\dfrac{l}{2r}\right)^2}\right]\vi \\
+                   & \approx \frac{q}{4\pi\eo r^2} \left(1+\frac{l}{r} - 1 + \frac{l}{r}\right) \vi                                           \\
+                   & = \frac{2ql}{4\pi\eo r^3}\vi
+              \end{align*}
+              定義 $\vl = -l\vi$ 及電偶極距矢量 $\vp = q\vl$
+              $$
+                  \vE \approx -\frac{1}{4\pi\eo}\frac{2\vp}{r^3}
+              $$
+
+        \item[\textbf{2)}]\textbf{對於中軸線上的$P'$點}
+              \begin{align*}
+                  \vE_+ & = \frac{1}{4\pi\eo}\frac{q}{r^2 + \dfrac{l^2}{4}}(-\cos \theta \vi + \sin \theta \vj) \\
+                  \vE_- & = \frac{1}{4\pi\eo}\frac{-q}{r^2 + \dfrac{l^2}{4}}(\cos \theta \vi + \sin \theta \vj)
+              \end{align*}
+              所以
+              \begin{align*}
+                  \vE & = \vE_{+} + \vE_{-}                                                                                    \\
+                      & = -2\frac{1}{4\pi\eo}\frac{q}{r^2 + \dfrac{l^2}{4}}\cos\theta \vi                                      \\
+                      & = -\frac{1}{2\pi\eo}\frac{q}{r^2 + \dfrac{l^2}{4}}\frac{\dfrac{l}{2}}{\sqrt{r^2 + \dfrac{l^2}{4}}} \vi \\
+                      & = -\frac{1}{4\pi\eo}\frac{ql}{\left(r^2 + \dfrac{l^2}{4}\right)^{3/2}} \vi                             \\
+                      & = -\frac{1}{4\pi\eo}\frac{ql}{r^3\left(1 + \dfrac{l^2}{4r^2}\right)^{3/2}} \vi
+              \end{align*}
+              因爲 $r \gg \dfrac{l}{2}$, $\left(1 + \dfrac{l^2}{4r^2}\right)^{3/2} \approx 1$, 又可以定義 $\vl = -l\vi$ 及電偶極距矢量 $\vp = q\vl$,
+              \begin{equation*}
+                  \vE \approx \frac{1}{4\pi\eo}\frac{\vp}{r^3} \qedhere
+              \end{equation*}
+    \end{itemize}
+\end{solve}

@@ -1,10 +1,7 @@
 -- trim
 function trim(s)
-    return (s:gsub( "^%s*(.-)%s*$", "%1"))
+    return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
-
--- local file = io.open("kkkkkkkk.txt", "a")
--- io.output(file)
 
 -- 檢查參數 %!KEY = VALUE
 -- 某一行, 鍵, 函數(參數), 無參函數
@@ -62,7 +59,6 @@ function input_fill(dir)
     --对所有键进行排序  
     table.sort(key_table)  
 
-    local result_table = {}
     for _,key in pairs(key_table) do  
         tex.sprint("\\input{" .. jb[key] .. "}")
     end

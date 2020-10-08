@@ -5,17 +5,19 @@
 \RequirePackage{includes/mathandphy}
 
 \newcommand*{\import}[2]{
-    \noindent \luaexec{
+    \noindent \textbf{\luaexec{
         dofile("includes/lua/subject.lua")
         tex.sprint(subject_table.#1)
     }
-    \ 第#2回 \hfill Homework \#\\
+    \ \luaexec{
+        tex.sprint(string.upper("#2"))
+    }} \hfill Homework \#\\
     Satanya@張睿 (\today)
     
     \noindent\hrulefill
     
     \luaexec{
         dofile("includes/lua/tools.lua")
-        input_fill("problems/#1/week#2")
+        input_fill("problems/#1/#2")
     }
 }
