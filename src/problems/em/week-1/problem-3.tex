@@ -1,33 +1,33 @@
 % !ORDER = 3
 
 \begin{problem}
-使用庫倫定律和高斯定理相互證明
+相互證明庫侖定律和高斯定理
 \begin{align*}
-    (庫倫定律)\  & \vE = \frac{1}{4\pi\eo} \frac{q}{r^2} \vr                       \\
+    (庫侖定律)\  & \vE = \frac{1}{4\pi\eo} \frac{q}{r^2} \vr                       \\
     (高斯定理)\  & \oiint_{\BbbS} \vE \cdot \dvS = \frac{1}{\eo} \sum_{i(\iS)} q_i
 \end{align*}
 \end{problem}
 
 \begin{solve}
-    極座標下，對於半徑爲$r$的一球面面元$\dA$，
+    極座標下，對於半徑爲$r$的一球面面元$\dA$有:
     $$\dA = (r\sin\theta\dph)(r\dth)$$
-    可定義極小立體角爲
+    可定義極小立體角爲:
     $$\dO = \frac{\dA}{r^2} = \sin\theta\dth\dph$$
-    對於更加普遍的有向面元$\dvS = \dS\vn$而言, 可推廣立體角定義爲
+    一般地, 對於有向面元$\dvS = \dS\vn$, 可推廣立體角定義爲:
     $$\dO  = \frac{(\vr\cdot\vn)\dS}{r^2} = \frac{\vr\cdot\vn}{|\vr\cdot\vn|}\sin\theta\dth\dph$$
-    由立體角的推廣定義，對於任一封閉曲面$\BbbS$所張之立體角也就有所定義了，當頂點在曲面内時, 對於曲面上的任一立體角元$\dO$，總有$\langle \vr,\vn \rangle < \pi/2$, 即 $\dfrac{ \vr\cdot\vn }{ |\vr\cdot\vn| } \equiv 1$, 於是
+    是以, 對於任一封閉曲面$\BbbS$, 當頂點在曲面内時, 對於曲面上的任一立體角元$\dO$，總有$\langle \vr,\vn \rangle < \dfrac{\pi}{2}$, 即 $\dfrac{ \vr\cdot\vn }{ |\vr\cdot\vn| } \equiv 1$, 於是
     $$\oiint_{\BbbS} \dO = \oiint_{\BbbS} \sin\theta \dth \dph = \int_0^\pi \sin\theta \dth \int_0^{2\pi} \dph = [-cos\theta]_0^{\pi} (2\pi)  = 4\pi$$
-    當頂點在曲面外時, 對於曲面上的任一立體角元$\dO$皆存在一個互爲相反數立體角元$\dO$, 使得積分結果爲$0$
+    當頂點在曲面外時, 對於頂點所張的任一$\dO$皆存在一個互爲相反數的$-\dO$, 使得積分結果爲$0$:
     $$\oiint_{\BbbS} \dO = 0$$
     \begin{itemize}
-        \item[\textbf{1)}] \textbf{庫倫定律 $\rightarrow$ 高斯定理}
+        \item[\textbf{1)}] \textbf{庫侖定律 $\rightarrow$ 高斯定理}
 
               數學中定義積分式:
               $$\iint_{\Sigma} \vA \cdot \vn \dS = \iint_{\Sigma} \vA \cdot \dvS$$
               爲向量場$\vA$通過曲面$\Sigma$向着指定側的\uwave{通量}, 其中$\vn$ 是面元的單位法向量.
-              對於電場$\vE$, 自然可定義\uwave{電通量}
+              對於電場$\vE$, 可定義\uwave{電通量}:
               $$\Phi_{E} = \iint_{\Sigma} \vE \cdot \vn \dS = \iint_{\Sigma} \vE \cdot \dvS$$
-              今假設空間中存在一封閉曲面$\BbbS$名曰\uwave{高斯面}. 則可依單個點電荷$q$與$\BbbS$的位置關係而對$\BbbS$向外側的電通量進行分類討論:
+              今假設空間中存在一封閉曲面$\BbbS$曰\uwave{高斯面}, 則可依點電荷$q$與$\BbbS$的位置關係而對$\BbbS$向外側的電通量進行分類討論:
               \columnseprule=0.4pt
               \begin{multicols}{2}
                   \begin{itemize}
@@ -58,12 +58,12 @@
               \end{align*}
 
 
-        \item[\textbf{2)}] \textbf{高斯定理 $\rightarrow$ 庫倫定律}
+        \item[\textbf{2)}] \textbf{高斯定理 $\rightarrow$ 庫侖定律}
 
-              設一點電荷$q$, 以其爲球心, $r$爲半徑假設球形高斯面$\BbbS$, 則有
+              對於點電荷$q$, 以其爲球心, $r$爲半徑設一球形高斯面$\BbbS$, 則有
               $$\oiint_{\BbbS} \vE \cdot \dvS = \oiint_{\BbbS} \vE \cdot \vn \dS = \frac{q}{\eo}$$
-              因爲在$\BbbS$上$\vn \equiv \vr$且$\vE \parallel \vr$, 場強大小在$\BbbS$上處處相等, 故
-              $$\vE \cdot \vn \oiint_{\BbbS} \dS = \vE \cdot \vr \oiint_{\BbbS} \dS = \frac{q}{\eo}$$
+              在$\BbbS$上$\vn \equiv \vr$且$\vE \parallel \vr$, 場強大小在$\BbbS$上處處相等, 是故
+              $$\vE \cdot \vr \oiint_{\BbbS} \dS = \vE \cdot \vn \oiint_{\BbbS} \dS = \frac{q}{\eo}$$
               $\vr^2 = 1$, 故$\vr$自反, 於是
               \begin{equation*}
                   \vE = \frac{\vr}{4\pi r^2}\frac{q}{\eo} = \frac{1}{4\pi\eo}\frac{q}{r^2}\vr \qedhere

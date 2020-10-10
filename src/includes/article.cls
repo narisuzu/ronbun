@@ -1,7 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{includes/report}[2020/10/07 my report class]
+\ProvidesClass{includes/article}[2020/10/07 my article class]
 
-\LoadClass[a4paper, 10ptj]{ltjsreport}
+\LoadClass[a4paper, 10ptj]{ltjsarticle}
 \RequirePackage{includes/mathandphy}
 
 \newcommand*{\import}[2]{

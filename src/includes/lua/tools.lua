@@ -1,6 +1,6 @@
 -- trim
-function trim(s)
-    return (s:gsub("^%s*(.-)%s*$", "%1"))
+function trim(str)
+    return (str:gsub("^%s*(.-)%s*$", "%1"))
 end
 
 -- 檢查參數 %!KEY = VALUE
@@ -50,15 +50,11 @@ function input_fill(dir)
             )
         end
     end
-
     local key_table = {}  
-    --取出所有的键  
     for key,_ in pairs(jb) do  
         table.insert(key_table,key)  
     end  
-    --对所有键进行排序  
     table.sort(key_table)  
-
     for _,key in pairs(key_table) do  
         tex.sprint("\\input{" .. jb[key] .. "}")
     end
