@@ -2,7 +2,7 @@
 \ProvidesPackage{includes/mathandphy}[2020/10/04 Math and Phy]
 
 \RequirePackage{luacode}
-\RequirePackage{luatexja}
+\RequirePackage{luatexja-fontspec}
 \RequirePackage{luatexja-adjust}
 \RequirePackage{amsmath}
 \RequirePackage{leading}
@@ -13,29 +13,44 @@
 \RequirePackage{ulem}
 \RequirePackage{bm}
 \RequirePackage{tikz}
-\usetikzlibrary{calc,patterns,angles,quotes}
+\RequirePackage{circuitikz}
+\usetikzlibrary{calc,patterns,angles,quotes,decorations.pathmorphing}
 \RequirePackage{booktabs}
 \RequirePackage[skins]{tcolorbox}
 \RequirePackage{graphicx}
 \RequirePackage{float} %设置图片浮动位置的宏包
 \RequirePackage{subfigure} %插入多图时用子图显示的宏包
 \RequirePackage{multicol}
+\RequirePackage{systeme}
 \RequirePackage[math-style=ISO]{unicode-math}
 \RequirePackage{emoji}
+\RequirePackage{paracol}
+\RequirePackage{steinmetz}
+\RequirePackage{etoolbox}
+\RequirePackage{siunitx}
+
+\twosided
+\columnratio{0.75}
+
+\luaexec{
+  dofile("includes/lua/subject.lua")
+  dofile("includes/lua/tools.lua")
+  pairc, pairc_rst = get_counter(0,1)
+}
+
+%font config
 \setmathfont{New Computer Modern Math}
+\setmainjfont[BoldFont=GenSekiGothicTW-R]{I.MingCP-Regular}
+\setsansjfont[BoldFont=GenSekiGothicTW-M]{GenSekiGothicTW-R}
+
+%svg
+\RequirePackage{svg}
 
 %行内公式行距调整
 \ltjenableadjust[linestep, profile]
 
 %行距設定
 \leading{1.7em}
-
-%微分算子
-\newcommand*{\dif}{\mathop{}\!\mathrm{d}}
-
-% 題解と証明
-\newenvironment{solve}{\begin{proof}[\textbf{解}]}{\end{proof}}
-\renewcommand{\proofname}{\textbf{證明}}
 
 % 問題
 \newtcolorbox[auto counter,number within=]{problem}{%
@@ -49,6 +64,44 @@
   boxed title style={tile,size=minimal,left=0.5mm,right=0.5mm,colback=white,before upper=\strut},
   title= \textbf{問題 \thetcbcounter}
 }
+
+% 難題
+\newtcolorbox[auto counter,number within=]{diffcult}{%
+  enhanced,
+  colback=white,
+  colframe=red!75!black,
+  coltitle=red!75!black,
+%  coltext=red!75!black,
+  boxrule=1pt,
+  sharp corners,
+  attach boxed title to top left={yshift=-0.3\baselineskip-0.4pt,xshift=5mm},
+  boxed title style={tile,size=minimal,left=0.5mm,right=0.5mm,colback=white,before upper=\strut},
+  title= \textbf{問題 \thetcbcounter}
+}
+
+% 題解と証明
+\newenvironment{solve}{\begin{proof}[\textbf{解}]}{\end{proof}}
+\renewcommand{\proofname}{\textbf{證明}}
+\BeforeBeginEnvironment{solve}{
+  \luaexec{
+    pairc_rst();
+  }
+}
+
+%雙欄
+\newcommand*{\pair}[2]{
+    \setlength\columnseprule{0.4pt}
+    \begin{paracol}{2}
+      \begin{leftcolumn}#1\end{leftcolumn}
+      \begin{rightcolumn}
+        \small\noindent
+          \luaexec{tex.sprint(circled_num(pairc()))}#2
+      \end{rightcolumn}
+  \end{paracol}
+}
+
+%微分算子
+\newcommand*{\dif}{\mathop{}\!\mathrm{d}}
 
 %單位向量
 \newcommand*{\vu}[1]{\hat{\symbf{#1}}}

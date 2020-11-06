@@ -60,5 +60,25 @@ function input_fill(dir)
     end
 end
 
+function get_counter(begin, step)
+    local cache = begin
+    return function() 
+        cache = cache + step
+        return cache
+    end, function()
+        cache = begin
+    end
+end
+
+function circled_num(num)
+    local num_table = {
+        "⓪","①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩",
+             "⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳",
+             "㉑","㉒","㉓","㉔","㉕","㉖","㉗","㉘","㉙","㉚",
+             "㉛","㉜","㉝","㉞","㉟","㊱","㊲","㊳","㊴","㊵",
+             "㊶","㊷","㊸","㊹","㊺","㊻","㊼","㊽","㊾","㊿"
+    }
+    return num_table[num+1]
+end
 
 

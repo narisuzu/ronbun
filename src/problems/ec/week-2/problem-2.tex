@@ -1,0 +1,85 @@
+%!ORDER = 2
+\begin{problem}
+下図の回路に於いて, インダクタンス$L_1$, $L_2$に電流は流れていないものとする.
+今$t=0$でスイッチ$S$を閉じたとき$L_1$, $L_2$にはいくらの電流が流れるか.
+ただし, キャパシタンス$C$の初期電荷を$Q$とする.
+\begin{figure}[H]%使用figure环境
+    \centering
+    \begin{circuitikz}[american voltages]
+        \draw (0,0) to[C=$C$, v<=$u(t)$, i=$i(t)$] (0,3) to[spst=$S$] (2,3) to (4,3) to[L=$L_2$, i=$i_2(t)$] (4,0) to (0,0);
+        \draw (2,3) to[L=$L_1$,i=$i_1(t)$, *-*] (2,0);
+    \end{circuitikz}
+    \caption{問題2の回路}%添加标题
+\end{figure}
+\end{problem}
+
+\begin{solve}
+    \pair{
+        \begin{equation}
+            i = i_1 + i_2
+        \end{equation}
+        ただし
+        \begin{align}
+             & i = C\frac{\dif u}{\dif t}                                  \\
+             & u = L_1\frac{\dif i_1}{\dif t} = L_2\frac{\dif i_2}{\dif t}
+        \end{align}
+        (3)式には(4),(5)を代入すると
+        \begin{equation}
+            C\frac{\dif^2 u}{\dif t^2} = \left(\frac{1}{L_1} + \frac{1}{L_2}\right)u
+        \end{equation}
+        ただし, $t = 0$のとき$u = \dfrac{Q}{C}$, 即ち,
+        $$u(0) = \dfrac{Q}{C}$$
+        (6)式を整理すると,
+        \begin{equation}
+            u''-\frac{L_1+L_2}{L_1L_2C}u = 0
+        \end{equation}
+        という微分方程式を得る.
+    }{
+        KCLとVCRで回路方程式を導出する
+    }
+    \pair{
+        (7)式の特性方程式は
+        $$p^2 - \frac{L_1+L_2}{L_1L_2C} = 0$$
+        即ち
+        \begin{equation}
+            p = \pm\sqrt{\frac{L_1+L_2}{L_1L_2C}}
+        \end{equation}
+        だから,
+        \begin{align}
+             & u = A_1\ce^{\sqrt{\frac{L_1+L_2}{L_1L_2C}}t} + A_2\ce^{-\sqrt{\frac{L_1+L_2}{L_1L_2C}}t}                                             \\
+             & i = C\sqrt{\frac{L_1+L_2}{L_1L_2C}}\left(A_1\ce^{\sqrt{\frac{L_1+L_2}{L_1L_2C}}t} - A_2\ce^{-\sqrt{\frac{L_1+L_2}{L_1L_2C}}t}\right)
+        \end{align}
+        $u(0) = \dfrac{Q}{C}$, $i(0) = 0$という初期条件は代入すれば,
+        \begin{equation}
+            \begin{cases}
+                A_1 + A_2 = \dfrac{Q}{C} \\
+                A_1 - A_2 = 0
+            \end{cases}
+        \end{equation}
+        即ち,
+        \begin{equation}
+            A_1 = A_2 = \dfrac{Q}{2C}
+        \end{equation}
+        (9)式に代入しれば,
+        $$u = \frac{Q}{2C}\left(\ce^{\sqrt{\frac{L_1+L_2}{L_1L_2C}}t} + \ce^{-\sqrt{\frac{L_1+L_2}{L_1L_2C}}t}\right)$$}{
+        微分方程式を解く
+    }
+
+    \pair{
+        (5)式より
+        \begin{align*}
+            i_1 & = \frac{1}{L_1}\int u \dif t + C                                                                                                               \\
+                & = \frac{Q}{2CL_1\sqrt{\frac{L_1+L_2}{L_1L_2C}}}\left(\ce^{\sqrt{\frac{L_1+L_2}{L_1L_2C}}t} - \ce^{-\sqrt{\frac{L_1+L_2}{L_1L_2C}}t}\right) + C
+        \end{align*}
+        $i_1(0) = 0$であるから$C = 0$.
+        \begin{equation*}
+            i_1 = \frac{Q}{2CL_1\sqrt{\frac{L_1+L_2}{L_1L_2C}}}\left(\ce^{\sqrt{\frac{L_1+L_2}{L_1L_2C}}t} - \ce^{-\sqrt{\frac{L_1+L_2}{L_1L_2C}}t}\right)
+        \end{equation*}
+        同じように
+        \begin{equation*}
+            i_2 = \frac{Q}{2CL_2\sqrt{\frac{L_1+L_2}{L_1L_2C}}}\left(\ce^{\sqrt{\frac{L_1+L_2}{L_1L_2C}}t} - \ce^{-\sqrt{\frac{L_1+L_2}{L_1L_2C}}t}\right) \qedhere
+        \end{equation*}
+    }{
+        $i_1$と$i_2$を求める
+    }
+\end{solve}

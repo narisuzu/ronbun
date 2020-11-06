@@ -7,6 +7,7 @@
         "-synctex=1",
         "-file-line-error",
         "--halt-on-error",
+        "-shell-escape",
         "-interaction=nonstopmode",
         "-output-directory=%OUTDIR%",
         "%DOCFILE%"

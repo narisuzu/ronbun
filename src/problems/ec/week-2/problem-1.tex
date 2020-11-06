@@ -1,0 +1,51 @@
+%!ORDER = 1
+\begin{problem}
+次の関数をラプラス逆変換せよ
+$$\frac{2s+3}{(s+3)^2(s+4)}$$
+\end{problem}
+
+\newcommand*{\lapr}{\mscrL^{-1}}
+\begin{solve}
+    \pair{
+        与式は
+        \begin{equation}
+            \frac{2s+3}{(s+3)^2(s+4)} = \frac{A}{(s+3)^2} + \frac{B}{s+3} + \frac{C}{s+4}
+        \end{equation}
+        とする. (1)式の両辺には$(s+3)^2(s+4)$をかけると,
+        \begin{equation}
+            2s+3 = A(s+4) + B(s+3)(s+4) +C(s+3)^2
+        \end{equation}
+        になる. そこで, $s = -3$とすると, $A = -3$. $s = -4$とすると, $C = -5$.
+        $A$と$C$は(2)式に代入すると,
+        \begin{align*}
+            2s+3 & = -3s - 12 + Bs^2 + 7Bs + 12B + Cs^2 + 6Cs + 9C \\
+                 & = (B+C)s^2 + (7B + 6C -3)s + (12B + 9C -12)
+        \end{align*}
+        両辺の係数を比較すると, $B+C = 0$, $7B + 6C -3=2$, $12B + 9C -12=3$. それで,
+        $$
+            \begin{cases}
+                A = -3 \\
+                B = 5  \\
+                C = -5
+            \end{cases}
+        $$
+        (1)式には$A$,$B$と$C$の値を代入すると,
+        $$
+            \frac{2s+3}{(s+3)^2(s+4)} = \frac{-3}{(s+3)^2} + \frac{5}{s+3} + \frac{-5}{s+4}
+        $$}{
+        与式を部分分数に分解する
+    }
+    \pair{
+        ラプラス変換表より,
+        \begin{align*}
+            \lapr[与式] & = -3\lapr\left[\frac{1}{(s+3)^2}\right] +5\lapr\left[\frac{1}{s+3}\right] -5\lapr\left[\frac{1}{s+4}\right] \\
+                        & =  -3t\ce^{-3t} + 5\ce^{-3t} -5\ce^{-4t}\qedhere
+        \end{align*}
+    }{
+        ラプラス変換表及びラプラス逆変換の性質を利用し、結果を求める.
+        \begin{align*}
+             & \mscrL\left[\ce^{at}\right] = \frac{1}{s-a}                      \\
+             & \mscrL\left[t^m\ce^{at}\right] = \frac{\Gamma(m+1)}{(s-a)^{m+1}}
+        \end{align*}
+    }
+\end{solve}

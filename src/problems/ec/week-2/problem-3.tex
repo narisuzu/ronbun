@@ -1,0 +1,28 @@
+%!ORDER = 3
+\begin{problem}
+$|\mscrE|=100\ \si\volt$, $|I|=20\ \si\ampere$, $P=1.5\ \si{\kilo\watt}$ の電力を消費する回路の力率$\cos\varphi$,
+インピーダンス$Z$,抵抗$R$及びリアクタンス$X_L$を求めよ.
+\end{problem}
+
+\begin{solve}
+    \pair{
+        \begin{align*}
+            P & = |\mscrE||I|\cos\varphi                  \\
+              & = 2000 \cos\varphi = 1.5\ \si{\kilo\watt}
+        \end{align*}
+        だから, $\cos\varphi = 0.75$ である
+    }{$\cos\varphi$を求める}
+
+    \pair{
+        $\sin\varphi = \sqrt{1 - \cos^2\varphi} \approx 0.66$ であるから,
+        \begin{align*}
+            Z = \frac{\mscrE}{I} = \frac{|\mscrE|\phase{\phi_\mscre}}{|I|\phase{\phi_i}}=\frac{|\mscrE|}{|I|}\phase{\phi_\mscre - \phi_i}=\frac{|\mscrE|}{|I|}\phase{\varphi} \approx 3.75 + \cj 3.3 \ \si\ohm
+        \end{align*}
+    }{インピーダンス$Z$を求める}
+
+    \pair{\begin{align*}
+             & R   = \Re Z = 3.75\ \si\ohm         \\
+             & X_L = \Im Z = 3.3\ \si\ohm \qedhere
+        \end{align*}
+    }{抵抗$R$及びリアクタンス$X_L$を求める}
+\end{solve}

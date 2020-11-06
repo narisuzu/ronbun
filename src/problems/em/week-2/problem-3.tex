@@ -1,0 +1,27 @@
+% !ORDER = 3
+
+\begin{problem}
+利用旋度定義證明斯托克斯定理
+$$\iint_\Sigma \rot \vA \cdot \dvS = \oint_\Gamma \vA \cdot \dvl$$
+\end{problem}
+
+\begin{solve}
+    將曲面$\Sigma$劃分爲$i$個有向面元$\DS$, 是故
+    \begin{equation}
+        \iint_\Sigma \rot \vA \cdot \dvS = \lim_{\DS \to 0}\sum_i \rot \vA \cdot \vn \DS
+    \end{equation}
+    \emph{旋度是環量的面密度}, 即
+    \begin{equation}
+        \lim_{S\to 0} \frac{\displaystyle \oint_\Gamma \vA \cdot \dvl}{S} = \rot \vA \cdot \vn
+    \end{equation}
+    其中$\vn$是有向曲面$\vS$的單位法向量, 又因爲, 當$\DS_i \to 0$時可認爲面元$\DS_i$中旋度均等:
+    $$\lim_{\DS_i \to 0}\rot\vA \cdot \vn\DS_i = \oint_{\Gamma_i} \vA \cdot \dvl$$
+    對於每個面元$\DS_i$的環路$\Gamma_i$,其和其鄰接面元鄰邊上的線積分大小相等方向相反,相互消去, 只有在$\Sigma$的邊界$\Gamma$時,該項才得以留存.
+    綜上
+    \begin{align}
+        \iint_\Sigma \rot \vA \cdot \dvS & = \lim_{\DS_i \to 0}\sum_i \rot \vA \cdot \vn \DS_i  \\
+                                         & = \sum_i \lim_{\DS_i \to 0} \rot \vA \cdot \vn \DS_i \\
+                                         & = \sum_i \oint_{\Gamma_i} \vA \cdot \dvl             \\
+                                         & = \oint_{\Gamma} \vA \cdot \dvl
+    \end{align}
+\end{solve}
