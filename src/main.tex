@@ -1,0 +1,43 @@
+\documentclass[zihao = -4, linespread = 1.5]{ctexart}
+\usepackage{mathandphy}
+\usepackage{fancyhdr}
+\pagestyle{plain}
+
+\title{论}
+\author{张睿}
+\date{2021/04/15 \quad v0.6c}
+\ctexset{
+    abstractname = {\large{摘\quad 要}},
+    bibname = {文\quad 献},
+    contentsname = {\rmfamily\centerline{目\quad 次}},
+    section = {
+        format = \large\bfseries\sffamily
+    },
+    subsection = {
+        format = \zihao{4}\bfseries\sffamily
+    },
+    subsubsection = {
+        format = \normalsize\sffamily
+    }
+}
+
+\begin{document}
+
+\maketitle
+
+\include{abstract}
+
+\tableofcontents
+
+\include{chapters/chap01.xulun}
+\include{chapters/chap02.need}
+\include{chapters/chap03.architecture}
+\include{chapters/chap04.backend}
+\include{chapters/chap05.database}
+\include{chapters/chap06.frontend}
+\include{chapters/chap07.network}
+\include{chapters/chap08.test}
+
+
+杀杀杀
+\end{document}
