@@ -1,42 +1,34 @@
-\documentclass[zihao = -4, linespread = 1.5]{ctexart}
-\usepackage{mathandphy}
-\usepackage{fancyhdr}
-\pagestyle{plain}
+\documentclass{hautart}
 
-\title{论}
-\author{张睿}
-\date{2021/04/15 \quad v0.6c}
-\ctexset{
-    abstractname = {\large{摘\quad 要}},
-    bibname = {文\quad 献},
-    contentsname = {\rmfamily\centerline{目\quad 次}},
-    section = {
-        format = \large\bfseries\sffamily
-    },
-    subsection = {
-        format = \zihao{4}\bfseries\sffamily
-    },
-    subsubsection = {
-        format = \normalsize\sffamily
-    }
+\hautset{
+    title = 计算机联锁培训系统设计,
+    author = 张睿,
+    gakubu = 电气工程学院,
+    class = 轨道1702,
+    stuid = 201712010311,
+    teacher = 尚庆松,
+    rank = 讲师,
+    engtitle = Design of Computer-based interlocking edutraining system
 }
 
 \begin{document}
-
+\pagenumbering{Roman}
 \maketitle
-
 \include{abstract}
-
 \tableofcontents
+\newpage
+\pagenumbering{arabic}
 
 \include{chapters/chap01.xulun}
 \include{chapters/chap02.need}
 \include{chapters/chap03.architecture}
-\include{chapters/chap04.backend}
-\include{chapters/chap05.database}
-\include{chapters/chap06.frontend}
-\include{chapters/chap07.network}
-\include{chapters/chap08.test}
+\include{chapters/chap04.auth}
+\include{chapters/chap05.api}
+\include{chapters/chap06.database}
+\include{chapters/chap07.executor}
+\include{chapters/chap08.netwrok}
+\include{chapters/chap09.web}
+\include{chapters/chap10.test}
 
 
 杀杀杀

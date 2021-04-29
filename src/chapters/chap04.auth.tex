@@ -1,0 +1,23 @@
+\section{Auth}
+本案设管理员和用户两种用户身份，不同的服务需要响应的权限才能运行
+\subsection{JWT}
+JSON Web Token(JWT)是一个开放标准（RFC 7519），用于创建具有可选的签名和/或可选的加密的数据，
+其载荷持有JSON。token 使用私人秘密或公共/私人密钥进行签名。服务器可以生成一个包含用户身份和用户id的token，并将其提供给客户端。
+然后，客户端可以使用该token来证明其身份。
+
+本案的 uroj-common crate 中封装了JWT相关的函数，其claim定义为
+\begin{lstlisting}
+pub struct Claims {
+    pub sub: String,
+    pub exp: i64,
+    pub role: String,
+}
+\end{lstlisting}
+
+其中 sub 是用户ID，exp是token有效期，role是用户身份，当用户登入时，生成一个claim并将其编码成token。
+在web端将该token存入cookie中，在之后的所有请求头中携带token进行访问，服务端就可以将token解码成claim，
+从而得知用户id和用户身份，从而判断用户是否有请求该方法的权限。
+
+这个过程可以很形象的理解成当学生或教师进入大学时发放相关证件（学生卡/教职卡），卡片上记录着持卡人的信息和其身份（学生/教师等）
+在学校内需要验证身份的时候就可以使用证件来验证身份。token就是一种这样的证件，由服务端签发，由web端持有，在服务端需要
+验证身份时使用的。

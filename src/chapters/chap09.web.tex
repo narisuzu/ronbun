@@ -1,0 +1,48 @@
+\section{web端}
+web端以deno为服务器，
+\subsection{实例绘图}
+本案采用 Two.js 作为web图形库，Two.js 是一个为现代浏览器设计的二维绘图api。
+Two.js 与渲染器无关，其使同一个api可以在多种情况下进行渲染：webgl、canvas2d和svg。
+经过测试，webgl 的执行效率最高的，但是webgl会把矢量图转换成位图，导致图像解析度下降，
+因此本案中采用 svg 进行渲染，同时 svg 也是 Two.js 的缺省渲染器。
+\subsubsection{轨道节点绘图}
+一个轨道结点可以分为三个部分：线段、左端绝缘节、右端绝缘节。
+本案定义线段宽度为4，渲染线段从起点到终点。
+这里举个例子，以展示uroj是如何使用Two.js 进行绘图的。
+\begin{lstlisting}[language = JavaScript]
+const segment = two.makeLine(x1, y1, x2, y2)
+\end{lstlisting}
+上述代码表示的是使用 two.js 绘制一条从$(x_1, y_1)$到$(x_2, y_2)$的线段。
+
+绝缘节图像从样式上可分为三种，包括终端绝缘节、一般绝缘节和侵限绝缘节。
+普通绝缘节是和结点线段正交的短线段，
+侵限绝缘节是和结点线段正交的短线段和以短线段为直径的圆，
+终端绝缘节是与结点线段正交的短线段，和与短线段正交的短线段。 
+渲染绝缘节的关键在于将一定长度的旋转一定的角度使其与线段正交。
+
+\begin{figure}[ht]
+    \centering
+    \input{figures/node.tex}
+    \caption{\label{node}绝缘节渲染}
+\end{figure}
+
+以普通绝缘节举例，如图\ref{node} ，设$O$点为原点，假设$OO'$是轨道结点的线段，$AB$是绝缘节。
+由图可知，想要正确地渲染绝缘节，关键在于求出$A$和$B$的坐标,
+显然地，因为$AB$与$OO'$正交，所以 $\overrightarrow {OA} \cdot \overrightarrow {OO'} = 0$：
+$$ax + by = 0$$
+而绝缘节的长度是定好的，假设绝缘节长$l$ 则又有
+$$x^2 + y^2 = \frac{l^2}{4}$$
+两个方程组联立，方程组正定，可求出：$\displaystyle x = \pm \frac{bl}{2\sqrt{a^2+b^2}}$,
+$\displaystyle y = \mp \frac{al}{2\sqrt{a^2+b^2}}$。
+方程组共有正负两组解，正好是绝缘节的两端。
+
+对于侵限绝缘节而言，不过是在普通绝缘节上再绘制一以$l$为圆心的圆，而该圆是不需要旋转的。
+
+\subsubsection{信号机绘图}
+按照物理分类，信号机可以分为进站、出站、调车等信号机，还有高柱或矮柱等安装方式的区别。
+在二维的信号平面图上，信号机的方向也是需要考虑的。综合以上考量。本案中，为了正确的渲染一个信号机
+\subsubsection{时钟绘图}
+\subsubsection{独立按钮绘图}
+\subsubsection{功能按钮绘图}
+\subsection{实例状态}
+\subsection{panel绘图}

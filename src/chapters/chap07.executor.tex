@@ -1,0 +1,459 @@
+\section{Executor服务}
+Executor 是供实例执行的运行时（runtime）环境，一个executor中可以执行多个实例，实例会被管理在一个
+HashMap 中。
+\subsection{Instance(实例)}
+Instance是Executor中运行的基本单位，Executor服务的名字“执行器”的含义就是执行Instance的服务。
+一个Instance由某个Station所实例化，在 Executor 中和用户可以直接与相应的Instance进行交互。
+一台Instance的生命周期如下图所示
+
+一台实例只有一个逻辑用户，这是显而易见的，现实中一台终端只能同时由一个人操作。但本案还支持管理员控制
+和状态共享。管理员控制是允许管理员对任意一个运行中的实例进行最高权限的操作，包括普通用户的所有权限还有
+设置隐患（故障），任意生成列车等不和现实逻辑但有益于提高教学效率的操作。
+
+\subsection{状态组件}
+状态组件由 Signal Node 和 Train 组成，状态组件中保存着相应车站信号设备的实时状态。
+\subsubsection{Signal 状态机}
+譬如，Signal 中的二元组 filament\_status 表征灯丝状态，灯丝状态可取表\ref{fila_state}。
+Signal 中的 state 属性表征 信号机点灯状态，其可取表\ref{sgn_state}
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{fila_state}灯丝状态定义}
+    \begin{threeparttable}
+        \begin{tabular}{cc}
+            \toprule
+            属性   & 含义 \\
+            \midrule
+            Normal & 正常 \\
+            Fused  & 熔断 \\
+            None   & 空   \\
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{sgn_state}信号机状态定义}
+    \begin{threeparttable}
+        \begin{tabular}{cc}
+            \toprule
+            属性 & 含义 \\
+            \midrule
+            L    & 绿   \\
+            U    & 黄   \\
+            H    & 红   \\
+            B    & 月白 \\
+            A    & 蓝   \\
+            UU   & 双黄 \\
+            LU   & 绿黄 \\
+            LL   & 双绿 \\
+            US   & 黄闪 \\
+            HB   & 红白 \\
+            OFF  & 灭灯 \\
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
+
+\subsubsection{Node 状态机}
+与Signal的状态类似，Node 状态参见表 \ref{node_state}，但需要注意的是在程序中还定义了锁闭：Lock，但Lock并不参与业务逻辑，真正表征锁闭状态的是 Node struct 中的is\_lock 属性。
+该Lock枚举仅仅用于当Node锁闭时序列化成为状态帧向表示层发送。
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{node_state}轨道区段状态定义}
+    \begin{threeparttable}
+        \begin{tabular}{cc}
+            \toprule
+            属性       & 含义 \\
+            \midrule
+            Vacant     & 空闲 \\
+            Occupied   & 占用 \\
+            Unexpected & 异常 \\
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
+
+Node 状态可以由用户输入和车辆运动两种事件决定，相较Signal更复杂一些，
+因此用状态转移图来表示如下（不考虑非理想状况，如司机冒进信号）：
+
+\begin{figure}[ht]
+    \centering
+    \input{figures/node_fsm.tex}
+\end{figure}
+
+其中状态变量{a, b, c}分别为：a: 0为vacant（调整），1为occupied（分路），2为unexpected（分路不良、断轨等等） b: 是否锁闭 c: 是否曾占用
+。图中未绘出异常状态，但，上图的任意一种状态均可发生异常从而使node状态变为 unexpected.
+\subsection{实例组成}
+一个实例基本由 fsm、topo、layout 三个独立的部分构成。
+在实例初始化时会通过Station信息同时生成这三个部分。
+\subsubsection{topo}
+topo 保存一个实例所有的拓扑关系，包括车站图（即联锁关系，包含R关系和S关系），并置信号机映射，差置信号机映射，以及独立按钮映射，
+topo 能表征一个实例的各种组件（信号机、节点和按钮）在联锁逻辑上是如何耦合的。比如R关系表示了轨道结点之间
+是怎么连接的。
+
+\subsubsection{FSM}
+FSM（finite-state machine）即有限状态机, 该 struct 保存了一个实例所有的状态组件，包括上述的信号机、节点和车辆，并且管理
+整个车站的状态。后文将能改变FSM状态的因子称为事件(Event)，而每发生一个事件，都有可能会导致
+实例向表现层发送一个\emph{状态帧(GameFrame)}，状态帧是状态更新的载荷(Payload)，即在需要更新表现层车站状态渲染的时候向
+表现层发送的“新状态”，譬如某个信号机的灯光颜色，某个车辆的新位置，等等。但不是所有的事件都会导致
+产生并发送状态帧，譬如轨道曾占用是用于解锁逻辑判断使用的，而不需要在视图上有任何表示，所以轨道
+曾占用就不会产生状态帧。
+
+状态帧目前分为4种，UpdateSignal：更新信号，UpdateNode：更新结点，UpdateGlobalStatus：更新全局状态
+MoveTrain：车辆移动。其中UpdateSignal和UpdateNode分别包含id和state两个属性，表示更新设备的id和
+新状态。UpdateGlobalStatus则是UpdateSiganal和UpdateNode的数组。而MoveTrain有id属性表示被移动车辆的id
+，还有node\_id属性和process属性，前者表示车辆所处的结点编号，后者为小于1的浮点数，
+指的是车辆相对于结点的进程（即车辆走过了node\_id 结点的百分之几）。
+
+\subsubsection{Layout}
+实例中的 layout 是车站布局响应的载荷，即在用户请求车站布局时向表示层发送的车站布局信息。
+layout在实例初始化时会和FSM同时生成，实际上，关于表现层的车站布局信息有两种方案，其一是不在初始化实例时在实例中储存layout信息
+而在用户请求车站布局时再计算得出。其二是本案采用的，在Instance初始化时同步计算layout信息并保存，当用户请求时直接返回layout信息。
+这样做的好处是，以空间换时间，若有大量用户同时访问一个实例，或一个用户多次访问一个实例（如刷新页面），表现层请求车站布局用来渲染
+车站平面图时，多次计算layout信息会造成不必要的时间开销。
+一个layout由一组NodeData、一组SignalData和一个标题构成，标题用于渲染车站名。
+NodeData和SignalData 用于渲染结点和信号机。
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{node_data}NodeData属性}
+    \begin{threeparttable}
+        \begin{tabular}{lc}
+            \toprule
+            属性       & 作用         \\
+            \midrule
+            NodeID     & 唯一确定Node \\
+            TrackID    & 所属轨道电路 \\
+            LeftP      & 左端点       \\
+            RightP     & 右端点       \\
+            LeftJoint  & 左端绝缘节   \\
+            RightJoint & 右端绝缘节   \\
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{sgn_data}SignalData属性}
+    \begin{threeparttable}
+        \begin{tabular}{lc}
+            \toprule
+            属性          & 作用           \\
+            \midrule
+            id            & 唯一确定Signal \\
+            SgnKind       & 信号类型       \\
+            SgnMount      & 安装方式       \\
+            Pos           & 安装位置       \\
+            dir           & 左右朝向       \\
+            side          & 上下两侧       \\
+            ProtectNodeID & 防护Node       \\
+            Btns          & 信号机按钮     \\
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
+
+\subsection{Layout请求}
+uroj的executor，无论在哪一层，布局和状态都是无耦合的。这意味着表现层需要单独的请求车站的布局和车站的状态更新。
+本小节将介绍executor是如何将上述的Layout信息呈递给表现层的，而我们将在第九章看到如何利用表 \ref{node_data}
+和表 \ref{sgn_data} 中所列的属性在网页上正确地渲染出车站平面。
+
+executor 提供的车站布局接口是 station\_layout 方法，该方法会返回一个请求车站的layout的副本。当请求该
+方法，请求该方法需要一个id参数，用来指明所请求的layout是哪个实例的layout，executor会在当前运行的实例中寻找
+用户所输入的id所对应的实例，如果没找到则说明输入的id不是某个正在运行的实例。如果找到了则把该实例的layout克隆
+并返回。
+
+\subsection{状态更新}
+为保证表现层的状态能实时的被更新渲染，状态更新应该是长连接的单向流，uroj采用了graphql 的 subscription。
+其能通过websocket 协议源源不断的向订阅者(表现层)发送数据。在状态更新中即其载荷：状态帧。
+
+状态更新的接口是 game\_update 方法，该方法会返回一个内容为GameFrame(状态帧)的流。另外需要考虑的是
+当表现层订阅状态更新后，其会不断的获得实例的最新状态变化。但也仅限于状态变化，因为如果没有一些途径让
+表现层得知订阅状态更新时的初始状态，就不能正确地表现整个车站的所有状态。因此在订阅状态更新时收到的首个
+状态帧一定是UpdateGlobalStatus，用来渲染请求状态更新时车站的状态，后续的状态帧都是在这个初始状态之上的
+状态改变。这便是UpdateGlobalStatus状态帧存在的意义，
+另外，当有需要重置整个实例时，UpdateGlobalStatus这个状态帧也会被发送。
+
+\subsection{运行实例}
+无论用户是想要进行前文提到的请求车站布局(layout)亦或者是更新车站状态，最大的一个前提是实例要处于运行状态。
+这是理所当然的，就像你不能阅读一本还没有编写的图书一样。你需要先让实例加载并运行在executor内，才能读取
+实例的车站layout或者更新实例状态。
+
+在第五章，我们能够在api层中定义一个实例，预约实例运行的时间、配置实例相关的信息，并将这些信息存在数据库的
+Instance 表中，那么在实例所指定的Executor 上，就可以运行该实例。要想运行实例。用户
+需要输入实例ID（UUID）。而后executor会通过数据访问层(uroj-db)在Instance表中查找相应的实例。
+如果未找到，则说明访问的实例ID不合法。如果寻到对应的实例，则会验证实例的相关信息：如果访问实例
+的用户没有权限（没有Guest、Player或Operator 权限），则返回forbidden禁止访问。若用户有权限。那么
+还需要验证开始时间。因为在表现层，未满足开始时间要求的实例根本不会渲染开始入口（相关按钮），这里的
+验证看似冗余而没有必要，但其实不然，uroj的各个模块间的耦合策略是悲观的，意思是，executor 不应该信任
+前端（表现层）传来的数据一定不会包含违反开始时间约束的实例访问请求。
+
+当一切验证完成，executor 便会将 yaml 反序列化成 RawStation 对象，用数据库中查到的实例信息，和RawStation
+对象在executor中新建实例。在这个过程中，Instance 的new方法会将传入的RawStation 转化为 fsm, topo 和 layout。
+
+下面说明其中某些属性的推导过程，首先给出一个定义和一个推论：
+\begin{definition}
+    对于一个信号机，我们称其朝向的结点为该信号机的朝向结点，称其背向的结点为该信号机的防护结点
+\end{definition}
+\begin{corollary}
+    某个信号机的朝向等于其所防护区段的端，相反于列车行进方向和其防护区段相对信号机的位置。
+\end{corollary}
+举例说明：
+
+\begin{figure}[ht]
+    \centering
+    \input{figures/exm_node_sgn.tex}
+    \caption{\label{ens1}例子}
+\end{figure}
+
+上述信号机朝\uline{左}，因此其左边的结点为该信号机的朝向结点，右边的结点为其防护结点，并且，
+该信号机防护其\uline{右}侧区段的\uline{左}端，限制来自\uline{右}行的调车。
+
+\subsubsection{Layout.Signal的位置和朝向}
+应该能注意到表\ref{sgn_prop} 中的 Pos 和 dir 属性是可选的。这是因为其中的pos和dir是缺省值。
+即信号机的位置和朝向是可以从其他信息中推断出来的，这两个值如果留空则自动推断，如果不留空则
+有限使用pos和dir作为信号机的位置和朝向，那么应该如何推断呢？
+
+一般情况下，信号机位于两个轨道区段的衔接处, 绝缘节的旁边，因此通过表\ref{sgn_prop}定义的ProtectNodeID
+和 TowardNodeID 可以找到信号机所对应的防护结点和朝向结点，那么由推论1必然有信号机的朝向
+为从防护结点到朝向结点的方向，如果防护结点和朝向结点邻接（即在r关系中存在防护结点到朝向结点的边）
+那么在有向图r中就能得知信号机的方向。换言之如果防护结点和朝向结点不邻接，则说明违反了定义1，
+说明车站描述文件出错。
+
+对于信号机的位置而言是同理的，由推论1，若信号机朝左则一定位于防护节点的左端点，若其朝右
+则一定位于防护结点的右端点。而左端点或右端点的坐标是在RawNode（见表\ref{node_prop} ）
+中定义的。
+
+\subsubsection{FSM.Node的防护信号机}
+对于FSM的Node状态对象来说，需要知道一个Node的左端信号机和右端信号机，
+（这里需要明确一点：Fsm的Node状态对象中的左右端信号机，都应指的是防护本Node的信号机。）
+可以通过RawStation在信号机上定义的防护结点，结合信号机的朝向就可得知：由推论 1
+若信号机朝左，则其防护结点的左端信号机是该信号机，若信号机朝右，则其防护结点的右端信号机
+是该信号机。
+
+\subsection{结束实例}
+\subsection{新建进路}
+
+\subsubsection{点灯过程}
+点灯可以分情况讨论，当欲建立进路是发车进路时：
+需要点亮发车信号机的允许信号（不考虑区间上的状态）。
+当欲建立进路是接车进路时，
+需要点亮进站（反向进站）信号机的相应允许信号，但和发车不同之处在于，进站信号机
+所点亮之信号与接车的终点相关。因此本案采用特殊结点标记来判断接车进路会接车到哪种结点上。
+通过进路和进站接车在点灯上的行为相似，通过进路和进站进路的点灯逻辑可以用表\ref{homw_light}来表示
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{homw_light}通过和进站信号}
+    \begin{threeparttable}
+        \begin{tabular}{ccc}
+            \toprule
+            起点 & 终点             & 进站信号机 \\
+            \midrule
+            咽喉 & 咽喉             & L          \\
+            咽喉 & 站线             & UU         \\
+            咽喉 & 18号道岔以上站线 & US         \\
+            咽喉 & 正线             & U          \\
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
+\subsubsection{原子性}
+不难证明，新建进路过程的一个重要的性质为原子性：
+和取消进路的分段过程不同，建立进路时必须保证所有轨道节点要么全部锁闭，
+要么全部不锁闭（建立失败），不能出现部分节点锁闭部分结点不能锁闭的情况。
+
+若不考虑竞态条件（多线程时），先检测一个可能进路中所有节点是否满足封闭条件，
+再决定条件不满足而建立失败或者对所有结点统一进行锁闭以及对其进路扩展集进行征用。
+
+若不事前检测进路锁闭条件，则需要在封闭结点到中途遇到无法锁闭之结点时对之前锁闭的所有结点
+进行回滚（Rollback）。事实上，数据库事务的原子性便是通过这种方案保证的。但本案出于建立进路
+的性质考量，采用第一种方案。
+
+\subsubsection{方向约束}
+有了定义1和推论1，便可讨论接下来的内容，本案排选进路的核心算法以始终结点为输入，但实际上用户的输入却是按钮，如此一来
+程序便需要从用户的输入得知用户真正想要建立的进路是从哪一个结点到哪一个结点的。
+前文可知本案所定义的按钮有两种，一为信号机按钮，二为独立按钮。独立按钮自然有其到某个结点的映射。
+但信号机按钮所映射的实体是信号机，而信号机有两个属性都和结点相关（防护结点和朝向结点）。那么
+当用户点击信号机按钮时，究竟哪个结点才是用户想要建立进路的起点，哪个结点才是终点呢？
+对于起点或终点列车是向左边还是向右边行驶呢？
+不难发现，对于起点来说，不论建立哪种进路，起点总是始端信号机的防护结点，始端方向总是始端信号机的反向。
+真正有问题的是终点和终端方向的判断。不同类型的进路其终点和终端信号机的相对位置不同，就算是同种类型的进路，
+若终端信号机有并置或差置，位置就又有不同。判断始终点和始终端方向的意义用两个例子来说明，讨论图\ref{ens2} 情况：
+
+\begin{figure}[ht]
+    \centering
+    \input{figures/ens2.tex}
+    \caption{\label{ens2}例子}
+\end{figure}
+
+若用户点击 D1，D3，则不应该存在合法的进路。若没有额外的约束，则从结点1到结点3确实存在一条完全符合进路链定义
+的进路：$1 \rightarrow 2 \rightarrow 3$。但显然这是不应该存在的。
+
+第二个例子：假设想要建立一接车进路，无疑地，用户需要输入的始端信号机是进站信号机，
+终端信号机是与始端信号机反向的差置发车信号机。若使用同向的发车信号机作为终端信号机按钮输入，则不应该存在进路。
+但一个问题是，一对差置的接车信号机其朝向结点是相同的，而根据要求，接车进路的终点正是终点信号机的朝向结点。因此
+若不加限制则会造成若终端按钮点击的是两个差置的接车信号机的任意一个均可以成功找到合法的接车进路。
+
+为解决这种问题，引入方向约束，方向约束是本案中保证进路映射唯一性的一种约束。进路映射唯一性的含义是：一个进路输入
+能找到唯一的进路，为查找某条进路有且只有一个输入。方向约束有两个约束构成：始端方向约束和终端方向约束。在查找进路时
+我们把战场图中寻到的路径成为可能进路。一条可能进路的方向必须同时满足始端方向约束和终端方向约束，那么这条可能进路才能
+成为进路。
+
+对于\ref{ens2} 的问题，可以使用始端方向约束解决，对于可能的进路 $1 \rightarrow 2 \rightarrow 3$, 其方向是向右的。
+但始端信号机D1朝右，其防护的车辆必然向左行驶，则不满足始端方向约束，因此$1 \rightarrow 2 \rightarrow 3$不是合法的进路。
+
+对于终点信号机如何判断终点和特殊信号机（并置差置）的问题，可以通过终端方向约束解决。但需要分类讨论，见表\ref{route_end} 。
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{route_end}终点和方向}
+    \begin{threeparttable}
+        \begin{tabular}{llccc}
+            \toprule
+            起点按钮       & 终点按钮       & 进路类型 & 终点        & 终端方向     \\
+            \midrule
+            通过           & 列车           & 通过     & 朝向结点    & 终端信号朝向 \\
+            通过           & 列车终端       & 通过     & LZA映射结点 & 始端信号朝向 \\
+            列车(进站信号) & 列车(出站信号) & 接车     & 朝向结点    & 终端信号朝向 \\
+            列车(出站信号) & 列车(进站信号) & 发车     & 防护结点    & 终端信号朝向 \\
+            列车(出站信号) & 列车终端       & 发车     & LZA映射结点 & 始端信号朝向 \\
+            调车           & 调车           & 调车     & 朝向结点    & 终端信号反向 \\
+
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
+
+
+对于第二个例子，就需要用到终端方向约束来解决，在第二个例子中，起点按钮是列车按钮（进站信号），终点按钮是列车按钮（出站信号）
+终点是朝向结点，到这里和上述推论一样没有问题。当终端按钮按下的是同向的出站信号机按钮，终端信号朝向就会和车辆行驶方向
+相反，则违反了终端方向约束，不合法。
+只有点击差置的反向出站信号机按钮，其信号机朝向才和行驶方向一致，成为合法进路。
+
+\subsection{总取消进路}
+因为uroj创建进路后只改变状态机中的状态，而不对创建的进路进行记录，因此当用户输入一个起点按钮
+以取消进路时，需要先从实例中找到一条已经建立的进路。从用户所输入的信号机按钮可以得知：用户想
+取消进路的方向，和用户欲取消进路的起点。这是因为前文所述的“对于起点来说，
+不论建立哪种进路，起点总是始端信号机的防护结点，始端方向总是始端信号机的反向。”
+
+因此有以下算法：
+\begin{enumerate}
+    \item 初始化一个vector，压入起点
+    \item 找到从该vector顶部结点出发且符合指定进路方向的边
+    \item 如果该边的终点锁闭且空闲，则压入该终点至vector中，并跳转至2
+    \item 若3的条件不满足，则返回vector
+\end{enumerate}
+我们称该vector为一可能的进路。该算法的作用仅是找到从给定起点向给定方向的最长连续锁闭结点。
+
+那么，显然的，对于上述的可能进路。若点击终端或者中间某个反向的信号机，依然可以得出其一部分作为可能进路。
+与创建进路类似的，取消进路也要满足原子性，显然不能只取消进路的一部分。所以这种可能进路是不允许成为可取消的进路的。
+
+uroj采用始端信号机状态来验证，如果用户输入的信号机没有开放，其必然不是某个现存进路的始端信号机。
+对于长进路，途经的调车信号机必然是开放的，看起来没办法使用始端信号机状态来验证了，但没关系。取消进路时的另一个约束时验证接近区段的状态，
+即接近区段必须空闲。这个约束是联锁逻辑所要求的。在验证此逻辑同时验证接近区段必须未锁闭就好。因为如果一个区段锁闭则其一定存在于某个进路中。
+从而一定不是某个进路的接近区段。
+
+\subsection{总人解进路}
+\subsection{区故解进路}
+\subsection{车辆事件}
+\subsection{状态共享}
+状态共享指的是当多个用户访问一个实例时，他们都能实时的观察到该实例的所有状态。但是
+逻辑上只能存在一个使用者，所以我们要对实例的操作权限做出一些限制。
+
+对于存取某个实例的用户来说，可以分为三类身份：Guest、Player和Operator。
+其中，对于所有的管理员用户都自动的拥有实例的Operator权限。而Player用户是每个实例唯一的，
+也就是该实例的逻辑使用者，但为了管理员能对所有实例实时控制，因此管理员也拥有一个实例的
+所有权限，即Operator是实例的事实使用者。
+
+而对于Guest，所有使用 token 访问实例的非 Operator 用户都是Guest，Guest不能对instance做出
+任何操作，而只能旁观。类似看直播一样的效果。设计Guest以及token的动机在于，一个实例的Player
+或者 Operator 可以将实例的token分享给其他用户，如此一来拿到token的用户就可以通过token访问
+到该实例，查看实例的实时状态。这种设计在演示教学上十分有用。比如教师可以使用本系统进行教学演示。
+将 token 分享给其学生们，学生们可以藉此观看教师的演示，而无需投影或者直播演示。
+
+对于无论何种身份，其区别只是Mutation的权限有区别，而订阅车站状态更新都是一样的。
+\subsection{ORM}
+详见第五章第一节
+
+\subsection{性能优化}
+本案中采用了许多技术以提升应用性能
+\subsubsection{分布式SOA}
+面向服务的体系结构（英语：service-oriented architecture）是一种分布式运算的软件设计方法。
+软件的部分组件（调用者），可以透过网络上的通用协议调用另一个应用软件组件运行、运作，让调用者获得服务。
+SOA原则上采用开放标准、与软件资源进行交互并采用表示的标准方式。一项服务应视为一个独立的功能单元，可以远程访问并独立运行与更新。
+根据架构图，uroj可以无限制的增加api和runtime的服务器数量，从而组成集群。如此便可以根据实际负载而提高应用吞吐量和算力。
+\subsubsection{优化查询}
+某些GraphQL查询需要执行数百个数据库查询，这些查询通常包含重复的数据，可以通过DataLoader来修复之。
+我们需要对查询分组，并且排除重复的查询。Dataloader就能完成这个工作，
+facebook 给出了一个请求范围的批处理和缓存解决方案。
+\begin{lstlisting}
+pub struct UserLoader {
+    pub pool: Arc<PgPool>,
+}
+
+#[async_trait::async_trait]
+impl Loader<String> for UserLoader {
+    type Value = User;
+    type Error = Error;
+
+    async fn load(&self, keys: &[String]) -> 
+    Result<HashMap<String, Self::Value>, Self::Error> {
+        let conn = self.pool.get().expect("...");
+        let users = UserData::find_many(keys, &conn)
+                  .expect("Can't get users' details");
+        Ok(
+          users.iter().map(|u|(u.id.clone(), u.into())).collect()
+        )
+    }
+}
+\end{lstlisting}
+
+以本案中采用的 UserLoader 为例，每次在数据库中查询新User时，
+都会将查询到的User放到Loader的缓存中（HashMap），若再查询相同的User，则会先在缓存中查找。若
+缓存中没有则再去数据库中查询。
+
+\subsubsection{数据库连接池}
+连接池（英语：connection pool）是维护的数据库连接的缓存，
+以便在将来需要对数据库发出请求时可以重用连接。
+每次需要再打开一个新的数据库连接都是低效的，而且在高流量条件下会导致资源耗尽。
+可以使用连接池解决这个问题以提高在数据库上执行命令的性能。
+为每个用户打开和维护数据库连接，尤其是对动态数据库驱动的网站应用程序发出的请求，
+既昂贵又浪费资源。在连接池中，创建连接之后，将连接放在池中并再次使用，这样就不必创建新的连接。
+如果所有连接都正在使用，则创建一个新连接并将其添加到池中。
+连接池还减少了用户必须等待创建与数据库的连接的时间。
+
+uroj 采用 r2d2 作为数据库连接池，r2d2 是rust的一个通用连接池。
+r2d2对于它所管理的连接类型是不可知的。
+ManageConnection特性的实现者提供了数据库特定的逻辑来创建和检查连接的健康状况。
+
+在 uroj-db crate 中使用如下create\_connection\_pool函数创建一个连接池。在
+uroj-api 和 uroj-runtime 使用本函数创建连接池。
+\begin{lstlisting}
+use diesel::r2d2::{ConnectionManager, Pool};
+use diesel::{pg::PgConnection, r2d2::PooledConnection};
+
+pub type PgPool = Pool<ConnectionManager<PgConnection>>;
+pub type Conn = PooledConnection<ConnectionManager<PgConnection>>;
+
+pub fn create_connection_pool() -> PgPool {
+    let url = env::var("DATABASE_URL").expect("Can't get DB URL");
+    let manager = ConnectionManager::<PgConnection>::new(url);
+    Pool::builder()
+        .build(manager)
+        .expect("Failed to create pool")
+}
+\end{lstlisting}
+\subsubsection{异步}
+大多数计算机程序的执行顺序与它的编写顺序相同。
+第一行执行，然后是下一行，以此类推。
+在同步编程中，当程序遇到一个不能立即完成的操作时，它将阻塞，直到该操作完成。
+例如，建立一个TCP连接需要在网络上与一个peer进行交换，这可能需要相当长的时间。
+在这段时间内，线程会被阻塞。
+
+通过异步编程，不能立即完成的操作被暂停到后台。线程不会被阻塞，可以继续运行其他事情。
+一旦操作完成，任务就会从其之前阻塞处恢复执行。
+
+uroj 作为异步应用开发并采用 tokio crate 作为异步任务的运行时。
+并且采用了rust性能最优的actix-web框架作为web服务器。

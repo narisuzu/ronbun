@@ -1,0 +1,114 @@
+\section{数据库架构}
+本案选用 ProsgreSQL 作为数据库管理系统，PostgreSQL是开源的对象-关系数据库数据库管理系统，
+在类似BSD许可与MIT许可的PostgreSQL许可下发行。
+
+\subsection{表结构}
+\subsubsection{classes}
+\begin{lstlisting}[language = SQL]
+CREATE TABLE classes(
+    id         serial       primary key,
+    class_name varchar(50)  unique not null
+)
+\end{lstlisting}
+主键id为自增整数，class\_name为班级名称
+\subsubsection{users}
+\begin{lstlisting}[language = SQL]
+CREATE TABLE users (
+    id             varchar(30)     primary key,
+    hash_pwd       varchar(60)     not null,
+    email          text            not null,
+    class_id       int  references classes(id) on delete set null,
+    user_role      varchar(20)     not null,
+    is_active      boolean         not null default 't',
+    joined_at      timestamp       not null default now(),
+    last_login_at  timestamp       default now()
+)
+\end{lstlisting}
+解释：
+\begin{itemize}
+    \item 主键为id，类型为字符串，即用户自定义的用户id
+    \item hash\_pwd 为加密后的用户密码
+    \item email 为用户的电子邮箱地址
+    \item class\_id 是表classes 的外键，表示用户所属的班级
+    \item user\_role 表示用户角色
+    \item is\_active 表示账户是否可用(未被禁用)
+    \item joined\_at 和 last\_login\_at 默认是插入时的时间
+\end{itemize}
+
+\subsubsection{stations}
+\begin{lstlisting}
+CREATE TABLE stations (
+    id          serial        primary key,
+    title       varchar(250)  not null,
+    description text,
+    created_at  timestamp     not null default now(),
+    updated_at  timestamp     not null default now(),
+    draft       boolean       not null default 'f',
+    author_id varchar(30) references users(id) on delete set null,
+    yaml        text          not null
+)
+\end{lstlisting}
+解释：
+\begin{itemize}
+    \item 主键为id, 自增整数
+    \item title 为车站的标题
+    \item description 为可空键，表示车站的备注
+    \item draft 表示是否为草稿
+    \item author\_id 是表 users 的外键，表示作者
+    \item created\_at 和 updated\_at 默认是插入时的时间
+    \item yaml 即为车站的描述文件内容
+\end{itemize}
+
+\subsubsection{executors}
+\begin{lstlisting}
+CREATE TABLE executors (
+    id             serial        primary key,
+    addr           varchar(50)   not null
+)
+\end{lstlisting}
+addr是该执行器的地址。
+
+\subsubsection{instances}
+\begin{lstlisting}
+CREATE TABLE instances (
+    id      uuid    primary key default gen_random_uuid(),
+    title   varchar(250)  not null,
+    description text,
+    created_at  timestamp     not null  default now(),
+    creator varchar(30) references users(id) on delete set null,
+    player  varchar(30)   not null  references users(id),    
+    yaml        text          not null,
+    curr_state  varchar(10)   not null,
+    begin_at    timestamp     not null  default now(),
+    executor_id int           not null  references executors(id),
+    token       varchar(6)    not null
+)
+\end{lstlisting}
+解释：
+\begin{itemize}
+    \item 主键为id, 类型是uuid
+    \item title 为实例标题
+    \item curr\_state 表示实例当前的状态
+    \item creator 是表 users 的外键，表示创建者
+    \item player 是表 users 的外键，表示实例的用户
+    \item created\_at  默认是插入时的时间
+    \item begin\_at 表示实例的开始时间
+    \item executor\_id 表示该实例的运行时id，是executors表的外键
+    \item yaml 即为车站的描述文件内容
+    \item token 是游客令牌
+\end{itemize}
+
+\subsection{ORM}
+本案采用ORM以提升开发效率，ORM 是一种程序设计技术，用于将数据库的记录映射到程序语言的对象中，
+或者将对象映射到某个表中，其封装了CRUD的SQL语句操作，可以让开发者从表中直接读入一个对象。或者将
+一个对象插入某个表。效果上说，它其实是创建了一个可在编程语言里使用的“虚拟对象数据库”。
+
+在本案的uroj-db library 中，定义了程序的DAO层逻辑，封装了所有项目需要的数据库访问方法。以便供
+Api, Auth, Executor 等服务复用。uroj采用diesel作为本案的ORM库，将DAO层的各种结构体定义
+和上小结所定义的SQL表映射起来的，就是diesel client所生成的schema。
+
+这里简单介绍一下 diesel 的使用步骤。首先需要定义migration，migration可以简单理解为创建和删除表
+的sql文件。将上一节的表定义好后。使用diesel生成schema，schema是diesel使用
+rust macro定义的一些字段。之后我们需要定义DAO层的struct，对于一个表一般而言需要两种
+struct，一个是读取用一个是插入用，但需要derive diesel提供的相应的过程宏，这样就可以
+将sql表和DAO 层 struct映射起来，再使用diesel提供的方法进行CRUD操作。

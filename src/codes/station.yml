@@ -1,0 +1,29 @@
+---
+title: 测试站
+nodes:       
+  - node_id: 129
+    node_kind: SIDING  #类型SIDING为站线节点
+    turnout_id: []  #道岔id组为空，说明该node不处于道岔区段
+    track_id: 3G  #其所属轨道区段的id为3G
+    left_adj: [97]  #左邻node 97
+    right_adj: [44]  #右邻node 44
+    conflicted_nodes: []  #没有相抵触的node
+    line: [[30.0, 2.0], [200.0, 2.0]]  #线段自(30,2)至(200,2)
+    joint: [NORMAL, NORMAL]  #两端绝缘节均为普通绝缘节
+signals:
+  - id: S
+    side: UPPER  #朝上
+    sig_type: HOME_SIGNAL  #进站信号机 
+    sig_mnt: POST_MOUNTING  #高柱
+    protect_node_id: 3  #防护节点3
+    toward_node_id: 1  #朝向节点1
+    btns: [PASS, GUIDE, TRAIN]  #拥有通过、引导、列车按钮
+  - id: S3
+    side: UNDER  #朝下
+    sgn_kind: STARTING_SIGNAL  #出站信号机
+    sgn_mnt: GROUND_MOUNTING  #矮柱
+    protect_node_id: 97  #防护节点97
+    toward_node_id: 129  #朝向节点129
+    btns: [TRAIN, SHUNT]  #拥有列车和调车按钮
+    dif_sgn: X3  #差置信号机为X3
+independent_btns: [] #没有独立按钮
