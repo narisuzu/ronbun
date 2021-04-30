@@ -1,4 +1,5 @@
 \begin{tikzpicture}
+    \small
     \tikzset{
         ->, % makes the edges directed
         >=stealth, % makes the arrow heads bold
@@ -6,7 +7,6 @@
         every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ node
         initial text=$ $, % sets the text that appears on the start arrow
     }
-    \small
     \node[accepting,state] (A)               {$\{0,0,0\}$};
     \node[state]         (B) [right of=A] {$\{0,1,0\}$};
     \node[state]         (C) [right of=B] {$\{1,1,0\}$};

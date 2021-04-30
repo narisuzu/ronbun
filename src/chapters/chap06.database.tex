@@ -1,4 +1,4 @@
-\section{数据库架构}
+\section{持久与数据层}
 本案选用 ProsgreSQL 作为数据库管理系统，PostgreSQL是开源的对象-关系数据库数据库管理系统，
 在类似BSD许可与MIT许可的PostgreSQL许可下发行。
 
@@ -112,3 +112,35 @@ Api, Auth, Executor 等服务复用。uroj采用diesel作为本案的ORM库，�
 rust macro定义的一些字段。之后我们需要定义DAO层的struct，对于一个表一般而言需要两种
 struct，一个是读取用一个是插入用，但需要derive diesel提供的相应的过程宏，这样就可以
 将sql表和DAO 层 struct映射起来，再使用diesel提供的方法进行CRUD操作。
+
+\subsection{连接池}
+连接池（英语：connection pool）是维护的数据库连接的缓存，
+以便在将来需要对数据库发出请求时可以重用连接。
+每次需要再打开一个新的数据库连接都是低效的，而且在高流量条件下会导致资源耗尽。
+可以使用连接池解决这个问题以提高在数据库上执行命令的性能。
+为每个用户打开和维护数据库连接，尤其是对动态数据库驱动的网站应用程序发出的请求，
+既昂贵又浪费资源。在连接池中，创建连接之后，将连接放在池中并再次使用，这样就不必创建新的连接。
+如果所有连接都正在使用，则创建一个新连接并将其添加到池中。
+连接池还减少了用户必须等待创建与数据库的连接的时间。
+
+uroj 采用 r2d2 作为数据库连接池，r2d2 是rust的一个通用连接池。
+r2d2对于它所管理的连接类型是不可知的。
+ManageConnection特性的实现者提供了数据库特定的逻辑来创建和检查连接的健康状况。
+
+在 uroj-db crate 中使用如下create\_connection\_pool函数创建一个连接池。在
+uroj-api 和 uroj-runtime 使用本函数创建连接池。
+\begin{lstlisting}
+use diesel::r2d2::{ConnectionManager, Pool};
+use diesel::{pg::PgConnection, r2d2::PooledConnection};
+
+pub type PgPool = Pool<ConnectionManager<PgConnection>>;
+pub type Conn = PooledConnection<ConnectionManager<PgConnection>>;
+
+pub fn create_connection_pool() -> PgPool {
+    let url = env::var("DATABASE_URL").expect("Can't get DB URL");
+    let manager = ConnectionManager::<PgConnection>::new(url);
+    Pool::builder()
+        .build(manager)
+        .expect("Failed to create pool")
+}
+\end{lstlisting}

@@ -42,6 +42,14 @@
     },
     subsubsection = {
         format = \normalsize\sffamily
+    },
+    paragraph = {
+      indent = \parindent,
+      name = {(,)},
+      number = \arabic{paragraph},
+      format = \normalsize,
+      beforeskip = 0ex,
+      afterskip = 0em
     }
 }
 
@@ -126,3 +134,14 @@
 
 \RequirePackage{makecell}
 \RequirePackage{threeparttable}
+
+\RequirePackage{caption}
+\captionsetup{font={small}} 
+
+\setcounter{secnumdepth}{5}
+% \renewcommand\theparagraph{\indent\normalfont(\arabic{paragraph})}
+% \newcommand\PARA{\paragraph{}}
+
+
+\numberwithin{figure}{section}
+\numberwithin{table}{section}

@@ -1,12 +1,13 @@
-\section{API服务}
+\section{业务层}
+
+\subsection{API 服务}
 API服务主要负责耦合data层和view层，上承用户的请求，下接数据库，从数据库读写数据并呈递给前端。
-在本案中，API服务提供车站、实例、考试、用户和班级四个类型的服务
-\subsection{车站}
-在api层中，Station 数据是最完备最上游的车站静态数据，其直接来源于用户的输入。
+在本案中，API服务提供车站、实例、考试、用户和班级四个类型的服务。
+在api服务中，Station 数据是最完备最上游的车站静态数据，其直接来源于用户的输入。
 车站模型定义为
 
 
-\subsection{新建实例}
+\subsubsection{新建实例}
 Instance是Station的实例，所以 Instance 需要 Station 数据进行初始化，另外为了创建Instance，
 还需要一些必要的信息，譬如Instance类型，Instance支持三种类型：练习，考试和链，考试和链都需要一些描述该类型的详细内容，譬如考题与判分标准等，
 再如Instance需要和用户交互，所以需要在创建实例时指定实例的用户，实例用户和实例创建者不一定相同，
@@ -23,5 +24,5 @@ UUID具有唯一性，这与其他大多数编号方案不同。重复UUID码概
 
 uroj使用PostgreSQL的gen\_random\_uuid函数生成版本4的UUID。
 
-\subsection{用户}
-\subsection{班级}
+\subsubsection{用户}
+\subsubsection{班级}
