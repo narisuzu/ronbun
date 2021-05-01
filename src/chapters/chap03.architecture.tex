@@ -1,102 +1,21 @@
 \section{系统概览}
 \subsection{系统架构}
-本案采用分布式系统设计
+为提高并发，提升应用性能，本案采用分布式系统设计，如图\ref{org} 所示，
 
-\input{./figures/arch.tex}
+\begin{figure}[htbp!]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/pdf/org.pdf}
+    \caption{\label{org}系统架构组织图}
+\end{figure}
 
 本案符合非典型的web应用层次结构，分为表现层，接入层，业务逻辑层，数据访问层，
 其中数据访问层采用名为 diesel 的 Rust crate 作为 ORM。
 业务逻辑层分为Auth、API、Runtime等数个服务，每个服务都是独立的应用，可以横向扩展组成集群。
-接入层使用 Apollo 作为 GraphQL 的网关，向外暴露所有的服务接口，还可以进行流量控制。
-表现层使用 Deno 作为 Web 的运行时，使用 React 作为 GUI 框架，使用 Relay 进行网络通信
-
-
-\subsection{车站属性}
-车站属性从性质上可以分为图形属性和逻辑属性，
-图形属性用于表现层初始化Instance时正确地渲染出车站底平面图，
-逻辑属性用于Runtime初始化实例时正确地描述车站的拓扑关系和耦合逻辑。
-
-但车站的某个属性并非一定为图形属性或逻辑属性。本案特别地为此做出优化：
-本案只需要输入可以独自或和其他属性一起提供渲染或联锁逻辑所需信息的车站属性。
-也就是一个车站由完整描述车站的最小属性集合所描述，而之后业务中所需的所有信息都将由这个集合推导。
-如此以来用户不必输入非必要的冗余信息，提升了用户体验。
-
-基本上，一个车站是由数个Signal和数个Node构成的，
-所以，车站属性从组件上可分为Signal属性和Node属性。
-表\ref{node_prop}中为Node的属性，
-表\ref{sgn_prop}为Signal的属性，
-\newcommand{\yes}{$\checkmark$}
-\begin{table}[htpb!]
-    \centering
-    \caption{\label{node_prop}Node属性}
-    \begin{threeparttable}
-        \begin{tabular}{lccc}
-            \toprule
-            属性               & 作用         & 图形属性 & 逻辑属性 \\
-            \midrule
-            NodeID             & 唯一确定Node & \yes     & \yes     \\
-            NodeKind           & 类型         &          & \yes     \\
-            TurnoutID$^*$      & 所属道岔     &          & \yes     \\
-            TrackID            & 所属轨道电路 &          & \yes     \\
-            LeftAdj$^*$        & 左邻Node     &          & \yes     \\
-            RightAdj$^*$       & 右邻Node     &          & \yes     \\
-            ConflictedNode$^*$ & 抵触节点     &          & \yes     \\
-            Line               & 渲染线段     & \yes     &          \\
-            Joint              & 绝缘节类型   & \yes     &          \\
-            \bottomrule
-        \end{tabular}
-
-        \begin{tablenotes}
-            \footnotesize
-            \item[$*$] 表示该属性有数个
-        \end{tablenotes}
-    \end{threeparttable}
-
-\end{table}
-
-\begin{table}[htpb!]
-    \centering
-    \caption{\label{sgn_prop}Signal属性}
-    \begin{threeparttable}
-        \begin{tabular}{lccc}
-            \toprule
-            属性          & 作用           & 图形属性 & 逻辑属性 \\
-            \midrule
-            id            & 唯一确定Signal & \yes     & \yes     \\
-            SgnKind       & 信号类型       & \yes     & \yes     \\
-            SgnMount      & 安装方式       & \yes     &          \\
-            Pos$^\dag$    & 安装位置       & \yes     &          \\
-            dir$^\dag$    & 左右朝向       & \yes     & \yes     \\
-            side          & 上下两侧       & \yes     &          \\
-            ProtectNodeID & 防护Node       & \yes     & \yes     \\
-            TowardNodeID  & 朝向Node       & \yes     & \yes     \\
-            Btns$^*$      & 信号机安按钮   & \yes     & \yes     \\
-            JuxSgn$^\dag$ & 并置信号机     &          & \yes     \\
-            DifSgn$^\dag$ & 差置信号机     &          & \yes     \\
-            \bottomrule
-        \end{tabular}
-
-        \begin{tablenotes}
-            \footnotesize
-            \item[$*$] 表示该属性有数个
-            \item[$\dag$] 表示该属性非必须（可省略）
-        \end{tablenotes}
-    \end{threeparttable}
-\end{table}
-
-\subsection{车站描述文件}
-车站描述文件用于描述车站，即使用上述属性来定义一个车站，
-车站描述文件作为用户向本系统的输入，是用户唯一定义车站的方式，因此，
-为兼顾可读性和文件体积需求，本案采用yaml作为车站的描述语言。
-yaml 是一个可读性高，用来表达资料序列化的格式。Clark Evans在2001年首次发表了这种语言[1]，另外Ingy döt Net与Oren Ben-Kiki也是这语言的共同设计者[2]。
-目前已经有数种编程语言或脚本语言支持（或者说解析）这种语言。
-车站描述文件将在Executor中被解析成实例，与此相关的细节参见第七章。前文曾道
-“基本上，一个车站是由数个Signal和数个Node构成的”，但车站描述文件中除了信号机和节点的定义之外，还有另外两个字段
-其一是车站的标题，一般为站名，另一为独立按钮，譬如咽喉区设置的列车终端按钮LZA，这种按钮是不依附于信号机的，
-因此需要单独定义，包括按钮的id，位置和其映射的节点。
-这里给出一个非典型的车站描述文件作为例子：在注释中解释上述内容
-\lstinputlisting[language=yaml]{codes/station.yml}
-显然上述文件中定义了一个站线节点、一架进站信号机、一架出站兼调车信号机。
+接入层使用 Apollo 作为 GraphQL 的网关，向外暴露所有的服务接口，还可以进行流量控制，但为了
+支持运行时(Runtime)服务的“热插拔”，运行时服务并不会使用网关。
+表现层使用 Node.js 作为 Web 的运行时，使用 React 作为 GUI 框架。
+表现层和接入层、业务逻辑层使用 GraphQL 实现 Schema，使用 HTTP 和 WebSocket 协议通信，
+并使用 actix-web 作为web服务端。
 
 \subsection{生命周期与任务调度}
 一个典型的实例生命周期由以下几部分组成
@@ -107,9 +26,9 @@ yaml 是一个可读性高，用来表达资料序列化的格式。Clark Evans�
     \item 访问实例
     \item 结束实例
 \end{enumerate}
-其中，创建车站就需要用到上述的车站描述文件，车站被创建后将存入数据库中。创建好车站后，就可以创建
-这个车站的实例。本案支持预约或称定时开始的实例，一般练习的场景中，实例是即使创建的，但在考试的场景中
-，教师通常会提前配置好未来的考试。在创建实例时指定实例的开始时间，在开始之前若用户尝试在executor
+
+其中，创建车站就需要用到后文提到的车站描述文件，车站被创建后将存入数据库中。创建好车站后，就可以创建
+这个车站的实例。本案支持预约或称定时开始的实例，在开始之前若用户尝试在executor
 初始化一个实例，就会报错。在GUI上，在开始时间之前，不渲染开始按钮，和后端的时间约束形成两层约束。
 实例创建后同样也会被记录在数据库中，当时间到后用户就可以在创建实例时指定的executor上
 初始化实例 -- executor从数据库中读入instance，并运行。
