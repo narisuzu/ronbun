@@ -145,3 +145,5 @@
 
 \numberwithin{figure}{section}
 \numberwithin{table}{section}
+
+\RequirePackage{enumerate}
