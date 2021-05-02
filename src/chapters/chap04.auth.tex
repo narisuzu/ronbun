@@ -2,8 +2,8 @@
 本案设管理员和用户两种用户身份，不同的服务需要响应的权限才能运行
 \subsubsection{JWT}
 JSON Web Token(JWT)是一个开放标准（RFC 7519），用于创建具有可选的签名和/或可选的加密的数据，
-其载荷持有JSON。token 使用私人秘密或公共/私人密钥进行签名。服务器可以生成一个包含用户身份和用户id的token，并将其提供给客户端。
-然后，客户端可以使用该token来证明其身份。
+其载荷持有JSON。token 使用私人秘密或公共/私人密钥进行签名。服务器可以生成一个包含用户身份和用户id的token，
+并将其提供给客户端。然后，客户端可以使用该token来证明其身份。
 
 本案的 uroj-common crate 中封装了JWT相关的函数，其claim定义为
 \begin{lstlisting}
@@ -21,3 +21,45 @@ pub struct Claims {
 这个过程可以很形象的理解成当学生或教师进入大学时发放相关证件（学生卡/教职卡），卡片上记录着持卡人的信息和其身份（学生/教师等）
 在学校内需要验证身份的时候就可以使用证件来验证身份。token就是一种这样的证件，由服务端签发，由web端持有，在服务端需要
 验证身份时使用的。
+
+\subsubsection{用户}
+在uroj中生成一个新用户有两种途经、一个是只能由管理员执行的创建用户(create\_user)，另一个
+是注册。是两种很常见的应用场景。
+
+\paragraph{}创建用户
+创建用户的用户输入如表\ref{user_in}。
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{user_in}创建用户输入}
+    \begin{threeparttable}
+        \begin{tabular}{lc}
+            \toprule
+            属性          & 含义     \\
+            \midrule
+            id            & 用户id   \\
+            email         & 电子邮箱 \\
+            class\_id$^*$ & 班级id   \\
+            password      & 密码     \\
+            role          & 用户角色 \\
+            \bottomrule
+        \end{tabular}
+        \begin{tablenotes}
+            \footnotesize
+            \item[$*$] 表示该属性非必须（可省略）
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}
+
+api服务得到用户输入后，会使用bcrypte算法加密用户输入的password。并将用户信息和加密后的密码插入
+数据库的users表中。
+
+关于bcrypte：bcrypt是一个由Niels Provos以及David Mazières根据Blowfish加密算法所设计的密码散列函数，
+于1999年在USENIX中展示\cite{bycrypto}。本案中bcrypt会使用一个加盐的流程以防御彩虹表攻击，同时bcrypt还是适应性函数，
+它可以借由增加迭代之次数来抵御日益增进的电脑运算能力透过暴力法破解。本案中使用 12 次迭代。
+
+\paragraph{}注册
+
+\paragraph{}获得用户：从数据库查询一个用户并返回
+
+\paragraph{}禁用用户：从数据库查询一个用户并更新其is\_active 字段为 true。

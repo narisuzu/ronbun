@@ -31,8 +31,8 @@
 
 \ctexset{
     abstractname = {\large{摘\quad 要}},
-    bibname = {文\quad 献},
-    contentsname = {\rmfamily\centerline{目\quad 次}}, 
+    bibname = {\large\heiti\centerline{参\ 考\ 文\ 献}},
+    contentsname = {\large\centerline{目\quad 次}}, 
     tocdepth = 2,
     section = {
         format = \large\bfseries\sffamily
@@ -147,3 +147,16 @@
 \numberwithin{table}{section}
 
 \RequirePackage{enumerate}
+\RequirePackage{gbt7714}
+
+%谢谢
+\newenvironment{keturon}
+               {\section*{\centerline{\heiti 结\quad 论}}}
+               {\addcontentsline{toc}{section}{结论}}
+
+\newenvironment{arigatou}
+               {\section*{\centerline{\heiti 致\quad 谢}}}
+               {\addcontentsline{toc}{section}{致谢}}
+
+\RequirePackage{hologo}
+
