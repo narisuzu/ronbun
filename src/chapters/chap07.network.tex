@@ -1,1 +1,31 @@
-\section{网络通信}
+\section{杂项}
+本章记载一些无法纳入前文结构的一些内容
+\subsection{时区}
+本项目从数据库PostgreSQL、业务逻辑层到前端的表现层，一个需要重视的问题是时区。
+若是单时区应用的话大可以直接在数据库中保存北京时间的字符串，但本案为了保证通用性
+，考虑来自不同时区的用户，或者是部署于不同时区的数据库、服务器。因此在PostgreSQL中，
+本例使用时间戳（timestamp）保存时间，时间戳是UTC1970年1月1日0时0分0秒起至现在的总秒数。
+因此是一种没有时区的信息，或者说是协调世界时0时区的时间。
+
+从数据库中取到的时间戳，在业务逻辑层中被表示为 chrono 库中的 NaiveDateTime，NaiveDateTime是
+一种没有时区的日期时间字面量，其可以被简单地转换成任何时区的DateTime，因此我们会在
+业务逻辑层中将0时区的时间戳转换成业务逻辑层服务器所在时区的时间，并呈递给表现层。表现层
+显示哪种时区完全取决于其访问部署于何处的服务器。
+
+\subsection{网关}
+本案采用 Apollo 提供的Apollo Federation 功能和 ApolloGateway 配置网关
+如下：
+
+\begin{lstlisting}
+const gateway = new ApolloGateway({
+  serviceList: [
+    { name: 'auth', url: 'http://localhost:8001' },
+    { name: 'api', url: 'http://localhost:8002' },
+  ],
+});
+\end{lstlisting}
+
+Apollo Federation 可以将多个GraphQL 服务器统合成一个GraphQL服务器向外暴露
+服务。例如上代码所示，使用位于:8001端口的auth服务和位于:8002端口的api服务配置网关。
+
+\subsection{部署}

@@ -1,23 +1,121 @@
 \section{表现层}
-web端以deno为服务器，
-\subsection{实例绘图}
+web端以deno为服务器，使用 Apollo 提供的上下文包装器和React Hook来进行
+GraphQL通信。其中Apollo 在新建客户端时可以对其进行配置，可以将JWT存到
+Apollo客户端的上下文中，这样之后每次 Apollo 发出GraphQL请求都会携带着
+JWT，供业务层的服务鉴权。
+
+在配置Apollo 客户端时，token 从localStorage 中取得。
+\begin{lstlisting}
+const token = localStorage.getItem('token');
+\end{lstlisting}
+
+其中，token 是在登陆成功
+时存入 localStorage的，因此如果上列代码没有拿到token，即localStorage中
+不存在token，则会使用navigation 跳转到登录页面
+
+\subsection{控制台}
+控制台位于路径/app下，载入控制台时会检查登录状态，即localStorage中是否
+存在token。若没有登录则会跳转页面至登录页面。若登录后则会载入控制台主页面
+
+\subsubsection{注册页面}
+注册页面位于路径/register下，注册的GraphQL Mutation如下，
+其中input（输入）即表\ref{sign_up_in} 所载
+\begin{lstlisting}
+mutation SignUp($input: SignUpInput!) {
+    signUp(input: $input) {
+        id
+        email
+    }
+}
+\end{lstlisting}
+
+注册页面使用React.js 提供的表单组件，当用户输入完成注册信息后，会对用户输入进行信息格式验证
+（譬如邮箱必须符合邮箱的格式）这里使用了Yup这个js库来对格式进行验证，
+验证成功则将表单的输入生成一input对象，
+通过Apollo Client 提供的 useMutation Hook来执行注册mutation。
+若注册成功则使用 useNavigation Hook 跳转至登录界面，若失败则使用Material UI 提供的Alert组件
+显示错误信息警告。
+
+\subsubsection{登录页面}
+登录页面位于路径/login下，其GraphQL Mutation如下，
+其中input（输入）即表\ref{sign_in_in} 所载
+\begin{lstlisting}
+mutation SignIn($input: SignInInput!) {
+    signIn(input: $input)
+}
+\end{lstlisting}
+
+和注册页面大抵相同，用户输入、验证格式、执行mutation，这些步骤都是相同的。
+若登入成功，mutation会返回JWT的token。则将此token存入localStorage中。而后
+跳转至控制台主面板。
+若登入不成功则和注册页面一样使用Alert警告错误信息。
+
+\subsubsection{主页面}
+主页面分上下两部分，上部分为目前最新的实例信息，下部分为本周的实例统计。
+其中实例信息的GraphQL Query 如下：
+
+\begin{lstlisting}
+query {
+    instances{
+        id,
+        title,
+        player,
+        station{title},
+        currState,
+        beginAt,
+        executorId
+    }
+}
+\end{lstlisting}
+
+其会检索到数据库中所有的实例，并以表格的形式、以开始时间（beginAt）排序，
+显示在最新实例信息中。
+
+\subsubsection{车站列表页面}
+车站列表页面用来现实所有的车站信息，需呈现的车站信息
+凭如下GraphQL Query获取：
+\begin{lstlisting}
+query {
+    stations{
+        id,
+        title,
+        description,
+        created,
+        authorId
+    }
+}
+\end{lstlisting}
+
+\subsubsection{车站页面}
+某个车站详细信息的页面。通过以下GraphQL Query获取车站信息
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{新建车站页面}
+
+
+\subsection{实例}
 本案采用 Two.js 作为web图形库，Two.js 是一个为现代浏览器设计的二维绘图api。
 Two.js 与渲染器无关，其使同一个api可以在多种情况下进行渲染：webgl、canvas2d和svg。
 经过测试，webgl 的执行效率最高的，但是webgl会把矢量图转换成位图，导致图像解析度下降，
 因此本案中采用 svg 进行渲染，同时 svg 也是 Two.js 的缺省渲染器。
-\subsubsection{轨道节点绘图}
+\subsubsection{绘图}
+
+\paragraph{}轨道节点绘图
+
 一个轨道结点可以分为三个部分：线段、左端绝缘节、右端绝缘节。
 本案定义线段宽度为4，渲染线段从起点到终点。
 这里举个例子，以展示uroj是如何使用Two.js 进行绘图的。
 \begin{lstlisting}[language = JavaScript]
 const segment = two.makeLine(x1, y1, x2, y2)
 \end{lstlisting}
+
 上述代码表示的是使用 two.js 绘制一条从$(x_1, y_1)$到$(x_2, y_2)$的线段。
 
 绝缘节图像从样式上可分为三种，包括终端绝缘节、一般绝缘节和侵限绝缘节。
 普通绝缘节是和结点线段正交的短线段，
 侵限绝缘节是和结点线段正交的短线段和以短线段为直径的圆，
-终端绝缘节是与结点线段正交的短线段，和与短线段正交的短线段。 
+终端绝缘节是与结点线段正交的短线段，和与短线段正交的短线段。
 渲染绝缘节的关键在于将一定长度的旋转一定的角度使其与线段正交。
 
 \begin{figure}[ht]
@@ -38,11 +136,34 @@ $\displaystyle y = \mp \frac{al}{2\sqrt{a^2+b^2}}$。
 
 对于侵限绝缘节而言，不过是在普通绝缘节上再绘制一以$l$为圆心的圆，而该圆是不需要旋转的。
 
-\subsubsection{信号机绘图}
+\paragraph{}信号机绘图
+
 按照物理分类，信号机可以分为进站、出站、调车等信号机，还有高柱或矮柱等安装方式的区别。
-在二维的信号平面图上，信号机的方向也是需要考虑的。综合以上考量。本案中，为了正确的渲染一个信号机
-\subsubsection{时钟绘图}
-\subsubsection{独立按钮绘图}
-\subsubsection{功能按钮绘图}
-\subsection{实例状态}
-\subsection{panel绘图}
+在二维的信号平面图上，信号机的方向也是需要考虑的。综合以上考量、表 \ref{sgn_data} 所
+载属性是必要的。信号机绘图遵循下列步骤
+\begin{enumerate}[\indent i.]
+    \item 若信号机在上侧则设定基线长度为-10，否则为10 （因为Two.js的坐标系是左手系，$y$轴正向朝下）
+    \item 从零点到向下2个基线长度绘制信号机底座
+    \item 若信号机朝左则设定灯$x$轴为灯半径，朝右则为负半径
+    \item 若信号机朝左则设柱高为10，朝右则为-10
+    \item 若信号机为高柱则自底座的终点至$x$为柱高的点绘制柱子
+    \item 将灯$x$轴加上一个柱高
+    \item 在基线$y$、灯$x$处以灯半径绘制第一个灯
+    \item 若信号机类型为进站或出站信号机则在基线y、灯$x$加二倍半径处绘制第二个灯
+    \item 若定义了信号所属结点，则使用绝缘节渲染类似的算法将信号机旋转至和结点线段平行
+\end{enumerate}
+
+信号机绘图完成后，还需要对信号机的按钮进行绘图：便利信号机的按钮数组（如表\ref{sgn_data}所载）
+对响应类型的按钮绘制对应颜色的方形。
+
+\paragraph{}时钟绘图
+
+为减轻网络IO，时间采用用户本机时间，使用Two.js提供的文本渲染实现。
+
+\paragraph{}独立按钮绘图
+\paragraph{}功能按钮绘图
+
+\subsubsection{状态更新}
+
+\subsection{路由}
+
