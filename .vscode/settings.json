@@ -1,6 +1,13 @@
 {
   "latex-workshop.latex.tools": [
     {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": [
+        "%DOC%"
+      ]
+    },
+    {
       "name": "lualatex",
       "command": "lualatex",
       "args": [
@@ -15,13 +22,26 @@
     {
       "name": "bibtex",
       "command": "bibtex",
-      "args": ["%DOCFILE%"]
+      "args": [
+        "%DOCFILE%"
+      ]
     }
   ],
   "latex-workshop.latex.recipes": [
     {
+      "name": "latexmk 🔃",
+      "tools": [
+        "latexmk"
+      ]
+    },
+    {
       "name": "compile",
-      "tools": ["lualatex", "lualatex", "bibtex", "lualatex"]
+      "tools": [
+        "lualatex",
+        "lualatex",
+        "bibtex",
+        "lualatex"
+      ]
     }
   ],
   "latex-workshop.view.pdf.viewer": "tab",

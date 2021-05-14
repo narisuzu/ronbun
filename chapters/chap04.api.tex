@@ -1,0 +1,217 @@
+\section{业务层}
+
+\subsection{API 服务}
+API服务主要负责耦合data层和view层，上承用户的请求，下接数据库，从数据库读写数据并呈递给前端。
+在本案中，API服务提供车站、实例、考试、用户和班级四个类型的服务。
+在api服务中，Station 数据是最完备最上游的车站静态数据，其直接来源于用户的输入。Station 数据
+直接来源于车站描述文件
+
+\subsubsection{车站}
+
+在说明车站在api服务中如何被创建获取之前，让我们先解释一下什么是
+车站描述文件以及其中的车站属性。
+
+\paragraph{}车站属性
+
+车站属性从性质上可以分为图形属性和逻辑属性，
+图形属性用于表现层初始化Instance时正确地渲染出车站底平面图，
+逻辑属性用于Runtime初始化实例时正确地描述车站的拓扑关系和耦合逻辑。
+
+但车站的某个属性并非一定为图形属性或逻辑属性。本案特别地为此做出优化：
+本案只需要输入可以独自或和其他属性一起提供渲染或联锁逻辑所需信息的车站属性。
+也就是一个车站由完整描述车站的最小属性集合所描述，而之后业务中所需的所有信息都将由这个集合推导。
+如此以来用户不必输入非必要的冗余信息，提升了用户体验。基本上，一个车站是由数个Signal和数个Node构成的，
+所以，车站属性从组件上可分为Signal属性和Node属性。
+表\ref{node_prop}中为Node的属性，
+表\ref{sgn_prop}为Signal的属性。
+
+这些信息保存在用户上传的车站描述文件中，并储存在数据库车站表(station)的yaml行内，
+其会在运行时服务被反序列化成所需的各种对象。
+
+\newcommand{\yes}{$\checkmark$}
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{node_prop}Node属性}
+    \begin{threeparttable}
+        \begin{tabular}{lccc}
+            \toprule
+            属性               & 作用         & 图形属性 & 逻辑属性 \\
+            \midrule
+            NodeID             & 唯一确定Node & \yes     & \yes     \\
+            NodeKind           & 类型         &          & \yes     \\
+            TurnoutID$^*$      & 所属道岔     &          & \yes     \\
+            TrackID            & 所属轨道电路 &          & \yes     \\
+            LeftAdj$^*$        & 左邻Node     &          & \yes     \\
+            RightAdj$^*$       & 右邻Node     &          & \yes     \\
+            ConflictedNode$^*$ & 抵触节点     &          & \yes     \\
+            Line               & 渲染线段     & \yes     &          \\
+            Joint              & 绝缘节类型   & \yes     &          \\
+            \bottomrule
+        \end{tabular}
+
+        \begin{tablenotes}
+            \footnotesize
+            \item[$*$] 表示该属性有数个
+        \end{tablenotes}
+    \end{threeparttable}
+
+\end{table}
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{sgn_prop}Signal属性}
+    \begin{threeparttable}
+        \begin{tabular}{lccc}
+            \toprule
+            属性          & 作用           & 图形属性 & 逻辑属性 \\
+            \midrule
+            id            & 唯一确定Signal & \yes     & \yes     \\
+            SgnKind       & 信号类型       & \yes     & \yes     \\
+            SgnMount      & 安装方式       & \yes     &          \\
+            Pos$^\dag$    & 安装位置       & \yes     &          \\
+            dir$^\dag$    & 左右朝向       & \yes     & \yes     \\
+            side          & 上下两侧       & \yes     &          \\
+            ProtectNodeID & 防护Node       & \yes     & \yes     \\
+            TowardNodeID  & 朝向Node       & \yes     & \yes     \\
+            Btns$^*$      & 信号机安按钮   & \yes     & \yes     \\
+            JuxSgn$^\dag$ & 并置信号机     &          & \yes     \\
+            DifSgn$^\dag$ & 差置信号机     &          & \yes     \\
+            \bottomrule
+        \end{tabular}
+
+        \begin{tablenotes}
+            \footnotesize
+            \item[$*$] 表示该属性有数个
+            \item[$\dag$] 表示该属性非必须（可省略）
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}
+
+\paragraph{}车站描述文件
+
+车站属性并非直接存储于数据库之中，而是由用户编写成车站描述文件，将描述文件存储在数据库内。
+车站描述文件用于描述车站，即使用上述属性来定义一个车站，
+车站描述文件作为用户向本系统的输入，是用户唯一定义车站的方式，因此，
+为兼顾可读性和文件体积需求，本案采用yaml作为车站的描述语言。
+yaml 是一个可读性高，用来表达资料序列化的格式。Clark Evans在2001年首次发表了这种语言[1]，另外Ingy döt Net与Oren Ben-Kiki也是这语言的共同设计者[2]。
+目前已经有数种编程语言或脚本语言支持（或者说解析）这种语言。
+车站描述文件将在Executor中被解析成实例，与此相关的细节参见第七章。前文曾道
+“基本上，一个车站是由数个Signal和数个Node构成的”，但车站描述文件中除了信号机和节点的定义之外，还有另外两个字段
+其一是车站的标题，一般为站名，另一为独立按钮，譬如咽喉区设置的列车终端按钮LZA，这种按钮是不依附于信号机的，
+因此需要单独定义，包括按钮的id，位置和其映射的节点。
+这里给出一个非典型的车站描述文件作为例子并在注释中说明上述内容
+\lstinputlisting{codes/test.json}
+显然上述文件中定义了一个站线节点、一架进站信号机、一架出站兼调车信号机。
+
+\paragraph{}新建车站
+
+新建车站是用户输入车站信息（上述提到的承载车站属性的车站描述文件和一些其他信息）并将其插入数据库的过程。
+表现层通过调用api服务Mutation中的 create\_station 来创建新车站。新建车站时需要的输入的项见表 \ref{create_sta_in}
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{create_sta_in}创建车站输入}
+    \begin{threeparttable}
+        \begin{tabular}{lc}
+            \toprule
+            属性            & 解释         \\
+            \midrule
+            title           & 标题         \\
+            description$^*$ & 注释         \\
+            draft           & 是否草稿     \\
+            yaml            & 车站描述文件 \\
+            \bottomrule
+        \end{tabular}
+        \begin{tablenotes}
+            \footnotesize
+            \item[$*$] 表示该属性非必须（可省略）
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}
+
+\paragraph{}获得车站：
+
+获得车站是通过查询数据库，使用户取得车站信息的过程。
+当表现层调用api服务 Query 中的 station 方法时，该方法会通过用户输入的station id在数据库中查找车站
+从API服务中获得的车站返回车站的所有原始信息，
+需要注意的是，该车站信息是表现层控制面板中用于获得车站列表、查看车站信息使用的。
+不是在初始化实例时渲染车站平面图用的，渲染车站平面图用的是运行时服务的“查询车站布局”。
+
+\subsubsection{实例配置}
+
+\paragraph{}创建实例配置
+
+Instance是Station的实例，在运行时中 Instance 需要 Station 数据进行初始化。
+但要想创建Instance，还需要一些必要的信息，譬如Instance类型，Instance支持两种类型：
+练习和考试，二者都需要一些描述该类型的详细内容，比如Instance需要和用户交互，
+所以需要在创建实例时指定实例的用户、详细的输入项见表 \ref{create_ins_in}。
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{create_ins_in}创建实例输入}
+    \begin{threeparttable}
+        \begin{tabular}{lc}
+            \toprule
+            属性            & 解释     \\
+            \midrule
+            title           & 标题     \\
+            description$^*$ & 注释     \\
+            player          & 用户     \\
+            station\_id     & 车站id   \\
+            executor\_id    & 运行时id \\
+            \bottomrule
+        \end{tabular}
+        \begin{tablenotes}
+            \footnotesize
+            \item[$*$] 表示该属性非必须（可省略）
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}
+
+实例用户和实例创建者不一定相同，在大多数练习场景中自然是相同的，但是在考试场景中，考试实例一般是由管理员（教师）创建给普通用户（学生）的。
+因为本案是分布式架构，因此整个系统不一定只有一台 Executor，因此创建Instance时需要指定一个 Executor 以执行该Instance。
+另外，用户创建实例是还需要为其指定标题与描述（可选）。
+
+创建实例时可以选择是否指定开始时间，若不指定则缺省为即时开始。一般练习的场景中，实例是即时创建的，
+但在考试的场景中，教师通常会提前配置好未来的考试。在创建实例时指定实例的开始时间（也必须指定结束的时间）。
+
+当新建实例之后，API会为实例生成唯一的UUID（Universally Unique Identifier），
+UUID是用于计算机体系中以识别信息数目的一个128位标识符，
+UUID根据标准方法生成，不依赖中央机构的注册和分配，
+UUID具有唯一性，这与其他大多数编号方案不同。重复UUID码概率接近零，可以忽略不计。
+因此UUID十分适合用在分布式系统数据表的主键。因为服务集群中即使有多个数据库、多个服务节点
+也能保证某个实例的主键是世界上唯一的。uroj使用PostgreSQL的gen\_random\_uuid函数生成版本4的UUID。
+
+数据库实例表中还有一个状态属性，表示实例当前的状态，如表\ref{ins_state} 当创建实例配置时会缺省为 Prestart，
+，在运行时初始化实例时会更新为Playing，当结束后会更新为Finished。
+
+\begin{table}[htpb!]
+    \centering
+    \caption{\label{ins_state}实例状态}
+    \begin{tabular}{lc}
+        \toprule
+        状态     & 含义   \\
+        \midrule
+        Prestart & 未开始 \\
+        Playing  & 进行中 \\
+        Finished & 已结束 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\paragraph{}获得实例配置
+
+和车站相同，这里获得的时实例的配置信息而不是实例信息。实例信息是供实例真正在运行时中运行的时候
+用来进行联锁逻辑或者供给表现层渲染用的。而这里获得到的实例配置是用于在表现层的控制台
+中呈现某个实例的配置、运行信息用的。
+
+\subsubsection{运行时}
+运行时比较简单，新建运行时只需要输入运行时的地址，获得运行时获得运行时的id和地址。
+
+\subsubsection{用户}
+api 服务中的用户只能用来获取，即从数据库查到一个用户的信息并返回。和Auth中定义的用户操作
+不同，api服务中的用户只是为了在表现层控制台中现实用户的个人信息。不用于验证身份、鉴权。
+也不能用于修改用户信息。
+
+\subsubsection{班级}
+用户是可选是否有班级属性的。班级可以创建或获取。创建班级只需要输入班级的名称。

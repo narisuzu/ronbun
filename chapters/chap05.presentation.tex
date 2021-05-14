@@ -1,0 +1,292 @@
+\section{表现层}
+web端以deno为服务器，使用 Apollo 提供的上下文包装器和React Hook来进行
+GraphQL通信。其中Apollo 在新建客户端时可以对其进行配置，可以将JWT存到
+Apollo客户端的上下文中，这样之后每次 Apollo 发出GraphQL请求都会携带着
+JWT，供业务层的服务鉴权。
+
+在配置Apollo 客户端时，token 从localStorage 中取得。
+\begin{lstlisting}
+const token = localStorage.getItem('token');
+\end{lstlisting}
+
+其中，token 是在登陆成功
+时存入 localStorage的，因此如果上列代码没有拿到token，即localStorage中
+不存在token，则会使用navigation 跳转到登录页面
+
+\subsection{控制台}
+控制台位于路径/app下，载入控制台时会检查登录状态，即localStorage中是否
+存在token。若没有登录则会跳转页面至登录页面。若登录后则会载入控制台主页面
+
+\paragraph{} 注册页面（路径: /register）
+
+注册的输入信息即表\ref{sign_up_in} 所载
+注册页面使用React.js 提供的表单组件，当用户输入完成注册信息后，会对用户输入进行信息格式验证
+（譬如邮箱必须符合邮箱的格式）这里使用了Yup这个js库来对格式进行验证，
+验证成功则将表单的输入生成一input对象，
+通过Apollo Client 提供的 useMutation Hook来执行注册mutation。
+若注册成功则使用 useNavigation Hook 跳转至登录界面，若失败则使用Material UI 提供的Alert组件
+显示错误信息警告。
+
+\paragraph{} 登录页面（路径：/login）
+
+
+用户登录的输入信息即表\ref{sign_in_in} 所载
+和注册页面大抵相同，用户输入、验证格式、执行mutation，这些步骤都是相同的。
+若登入成功，mutation会返回JWT的token。则将此token存入localStorage中。而后
+跳转至控制台主面板。
+若登入不成功则和注册页面一样使用Alert警告错误信息。
+
+\paragraph{} 主页面（路径：/app/dashboard）
+
+主页面分上下两部分，上部分为目前最新的实例信息，下部分为本周的实例统计。
+本页面会检索到数据库中所有的实例，并以表格的形式、以开始时间（beginAt）排序，
+显示在最新实例信息中。
+
+\paragraph{} 车站列表页面（路径：/app/stations）
+
+本页面中会查询所有的车站，并显示其简要信息：名称、作者、创建时间。如果
+某个车站是草稿（draft）则只有作者和管理员能看到该车站。
+
+\paragraph{} 车站页面（路径：/app/station/<id>）
+
+本页面是车站ID为id的车站的详细信息页面，其中展示了该这站的所有信息。
+包括车站简介（注释）、创建时间、修改时间、作者、是否为草稿，以及车站描述文件。
+其中车站描述文件采用了可交互的显示，为JSON增加了代码高亮、以及层次展开功能。
+
+用户需要从本页面新建实例，点击本页面上的新建实例按钮或新建考试按钮，弹出对话框
+在对话框中输入实例名称、注释（介绍），选择实例的运行时和用户。如此可以创建
+新实例。
+
+\paragraph{} 新建车站页面（路径：/app/new\_station）
+
+用户输入表\ref{create_sta_in} 中的项，以新建车站。
+其中title、description和yaml是文本域（TextField），draft是选择框（CheckBox）。
+
+\paragraph{} 用户列表页面（路径：/app/users）：
+本页面只有管理员能访问，展示了注册本系统的所有用户信息。
+
+\paragraph{} 用户信息页面（路径：/app/user/<id>）：
+本页面展示了某个用户的详细信息
+
+\paragraph{} 个人信息页面（路径：/app/account）：
+本页面展示了当前登录用户的个人信息
+
+\paragraph{} 运行时列表页面（路径：/app/executors）：
+本页面展示了所有运行时的信息，包括编号、地址和连通状态
+
+\paragraph{} 添加运行时页面（路径：/app/new\_executor）：
+在本页面中管理员可以添加一个运行时服务器至系统中。
+
+\subsection{实例}
+实例的路径是/instance/<id>，其中id是所访问实例的UUID。
+
+本案采用 Two.js 作为web图形库，Two.js 是一个为现代浏览器设计的二维绘图api。
+Two.js 与渲染器无关，其使同一个api可以在多种情况下进行渲染：webgl、canvas2d和svg。
+经过测试，webgl 的执行效率最高的，但是webgl会把矢量图转换成位图，导致图像解析度下降，
+因此本案中采用 svg 进行渲染，同时 svg 也是 Two.js 的缺省渲染器。
+
+\subsubsection{初始化/运行实例}
+访问实例页面时，首先会从localStorage载入该实例的本地状态，本地状态是在读取实例信息
+时存入的，该状态即表\ref{ins_state} ，如果当前处于 Prestart 状态，则在对应的运行时
+中初始化该实例。
+
+\subsubsection{布局绘图}
+
+载入实例后会首先会从运行时中载入车站布局和全局状态。用这些数据绘制车站的图形和初始状态。
+
+\paragraph{}轨道节点绘图
+
+一个轨道结点可以分为三个部分：线段、左端绝缘节、右端绝缘节。
+本案定义线段宽度为4，渲染线段从起点到终点。
+这里举个例子，以展示uroj是如何使用Two.js 进行绘图的。
+\begin{lstlisting}
+const segment = two.makeLine(x1, y1, x2, y2)
+\end{lstlisting}
+
+上述代码表示的是使用 two.js 绘制一条从$(x_1, y_1)$到$(x_2, y_2)$的线段。
+
+绝缘节图像从样式上可分为三种，包括终端绝缘节、一般绝缘节和侵限绝缘节。
+普通绝缘节是和结点线段正交的短线段，
+侵限绝缘节是和结点线段正交的短线段和以短线段为直径的圆，
+终端绝缘节是与结点线段正交的短线段，和与短线段正交的短线段。
+渲染绝缘节的关键在于将一定长度的旋转一定的角度使其与线段正交。
+
+\begin{figure}[ht]
+    \centering
+    \input{figures/node.tex}
+    \caption{\label{node}绝缘节渲染}
+\end{figure}
+
+以普通绝缘节举例，如图\ref{node} ，设$O$点为原点，假设$OO'$是轨道结点的线段，$AB$是绝缘节。
+由图可知，想要正确地渲染绝缘节，关键在于求出$A$和$B$的坐标,
+显然地，因为$AB$与$OO'$正交，所以 $\overrightarrow {OA} \cdot \overrightarrow {OO'} = 0$：
+$$ax + by = 0$$
+而绝缘节的长度是定好的，假设绝缘节长$l$ 则又有
+$$x^2 + y^2 = \frac{l^2}{4}$$
+两个方程组联立，方程组正定，可求出：$\displaystyle x = \pm \frac{bl}{2\sqrt{a^2+b^2}}$,
+$\displaystyle y = \mp \frac{al}{2\sqrt{a^2+b^2}}$。
+方程组共有正负两组解，正好是绝缘节的两端。
+
+对于侵限绝缘节而言，不过是在普通绝缘节上再绘制一以$l$为圆心的圆，而该圆是不需要旋转的。
+
+\paragraph{}信号机绘图
+
+按照物理分类，信号机可以分为进站、出站、调车等信号机，还有高柱或矮柱等安装方式的区别。
+在二维的信号平面图上，信号机的方向也是需要考虑的。综合以上考量、表 \ref{sgn_data} 所
+载属性是必要的。信号机绘图遵循下列步骤
+\begin{enumerate}[\indent i.]
+    \item 若信号机在上侧则设定基线长度为-10，否则为10 （因为Two.js的坐标系是左手系，$y$轴正向朝下）
+    \item 从零点到向下2个基线长度绘制信号机底座
+    \item 若信号机朝左则设定灯$x$轴为灯半径，朝右则为负半径
+    \item 若信号机朝左则设柱高为10，朝右则为-10
+    \item 若信号机为高柱则自底座的终点至$x$为柱高的点绘制柱子
+    \item 将灯$x$轴加上一个柱高
+    \item 在基线$y$、灯$x$处以灯半径绘制第一个灯
+    \item 若信号机类型为进站或出站信号机则在基线y、灯$x$加二倍半径处绘制第二个灯
+    \item 若定义了信号所属结点，则使用绝缘节渲染类似的算法将信号机旋转至和结点线段平行
+\end{enumerate}
+
+信号机绘图完成后，还需要对信号机的按钮进行绘图：遍历信号机的按钮数组（如表\ref{sgn_data}所载）
+对响应类型的按钮绘制对应颜色的方形。通过按钮和列车按钮为绿色，引导按钮为紫色，
+调车按钮为白色。
+
+前端存在着一个名为currMode的变量，该变量代表着当前的操作模式，比如createRoute（新建进路）
+等。在某个模式下点击信号机按钮（或下文所述的独立按钮），都会执行相应的操作。比如：在创建进路下
+连续点击的两个按钮会调用运行时中当前实例的createRoute方法创建新进路，在cancelRoute（取消进路）
+模式下，点击按钮会调用运行时中当前实例的cancelRoute方法取消进路，在区故解模式时会弹出对话框
+要求输入密码再取消进路。
+
+\paragraph{}车站名和时钟绘图
+
+为减轻网络IO，时间采用用户本机时间，使用Two.js提供的文本渲染实现。和车站名一样
+渲染在整个网页的中顶部。使用JS的setInterval函数，时钟每秒更新一次。
+
+\paragraph{}独立按钮绘图
+
+在独立按钮所指定的位置上渲染对应颜色的方形，和信号机按钮一样。
+
+\paragraph{}功能按钮绘图
+
+功能按钮包括：新进路、总取消、总人解、区故解等等。功能按钮被渲染在网页的中底部。
+每当按钮被点击时，都会更动当前的操作模式。如下代码所示
+\begin{lstlisting}
+const btns = [
+  {
+    mode: 'createRoute',
+    label: '新进路'
+  },
+  {
+    mode: 'cancelRoute',
+    label: '总取消'
+  },
+  {
+    mode: 'manuallyUnlock',
+    label: '总人解'
+  },
+  {
+    mode: 'errorUnlock',
+    label: '区故解'
+  },
+  ...
+]
+\end{lstlisting}
+
+在渲染功能按钮时，会将上述数组中的所有元素遍历，然后渲染在底部的dock栏中。
+当用户点击某个按钮时，将当前模式(currMode)置为对应按钮的mode。
+
+\paragraph{} 全局状态
+在布局绘图完成后，使用一并拮得的初始全局状态信息为实例的各组件渲染初始状态，
+其中结点状态循表\ref{node_render}，信号机状态循表\ref{signal_render}。
+
+\begin{table}
+    \centering
+    \caption{\label{node_render} 结点状态渲染}
+    \begin{tabular}{lc}
+        \toprule
+        状态       & 颜色(HEX)           \\
+        \midrule
+        Lock       & {\ttfamily\#ffffff} \\
+        Occupied   & {\ttfamily\#ff0000} \\
+        Vacant     & {\ttfamily\#00ffff} \\
+        Unexpected & 黄色条纹            \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}
+    \centering
+    \caption{\label{signal_render} 结点状态渲染}
+    \begin{tabular}{lcc}
+        \toprule
+        状态 & 灯一(HEX)           & 灯二(HEX)                            \\
+        \midrule
+        L    & {\ttfamily\#00ff00} & 无灯                                 \\
+        U    & {\ttfamily\#ffff00} & 无灯                                 \\
+        H    & {\ttfamily\#ff0000} & 无灯                                 \\
+        B    & {\ttfamily\#ffffff} & 无灯                                 \\
+        A    & {\ttfamily\#00ffff} & 无灯                                 \\
+        UU   & {\ttfamily\#ffff00} & {\ttfamily\#ffff00}                  \\
+        LU   & {\ttfamily\#ffff00} & {\ttfamily\#00ff00}                  \\
+        LL   & {\ttfamily\#00ff00} & {\ttfamily\#00ff00}                  \\
+        US   & {\ttfamily\#ffff00} & {\ttfamily\#ffff00 \& \#000000} 交替 \\
+        HB   & {\ttfamily\#ff0000} & {\ttfamily\#ffffff}                  \\
+        OFF  & {\ttfamily\#000000} & {\ttfamily\#000000} （若有灯）       \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsubsection{状态更新}
+
+在渲染布局和初始状态后，紧接着便会订阅状态更新，当服务端推送状态更新来时，将会通过状态更新接收的状态帧的
+类型（见表\ref{gameframe}）来更新相应的组件。其中前三者的步骤和前文所述的初始状态的更新方式相同，
+这里只介绍后三者：
+
+\paragraph{} 车辆移动
+
+移动车辆状态帧的内容是，车辆移动终点的结点ID、行进方向和进程（process），其中进程为小于1的浮点数，
+表示车辆位于从行进方向看去起点至终点距离的占比。因此只需要将车辆代表的标识（本案使用半径为2.5的黄色圆形代表）
+渲染在当前结点的指定位置处：假设当前结点的起点为$(x_1, y_1)$，终点为$(x_2, y_2)$，则车辆应该移动至：
+$\displaystyle(\frac{x_1 + x_2}{2}, \frac{x_1 + x_2}{2})$处。
+
+\paragraph{} 实例结束：当接收到实例结束状态帧后，会弹出对话框提示用户当前实例已经结束。
+
+\subsection{路由}
+
+本系统的前端是单页应用（SPA），本章前文所述的各个页面是通过React.js 的路由库 react-router-dom 实现的。
+具体定义的路由树如下：
+
+\begin{lstlisting}
+const routes = [
+  {
+    path: 'app',
+    element: <DashboardLayout />,
+    children: [
+      { path: 'account', element: <Account /> },
+      { path: 'users', element: <UserList /> },
+      { path: 'executors', element: <ExecutorList /> },
+      { path: 'new_station', element: <NewStation /> },
+      { path: 'new_executor', element: <NewExecutor /> },
+      { path: 'station/:id', element: <StationDetails/>},
+      { path: 'dashboard', element: <Dashboard /> },
+      { path: 'stations', element: <StationList /> },
+      { path: 'settings', element: <Settings /> },
+      { path: '*', element: <Navigate to="/404" /> }
+    ]
+  },
+  {
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> },
+      { path: '404', element: <NotFound /> },
+      { path: '/', element: <Navigate to="/app/dashboard" /> },
+      { path: '*', element: <Navigate to="/404" /> }
+    ]
+  },
+  {
+    path: 'instance/:id',
+    element: <InstanceLayout />,
+  }
+];
+\end{lstlisting}

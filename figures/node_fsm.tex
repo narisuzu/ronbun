@@ -1,0 +1,21 @@
+\begin{tikzpicture}[font={\small}]
+    \tikzset{
+        ->, % makes the edges directed
+        >=stealth, % makes the arrow heads bold
+        node distance=4cm, % specifies the minimum distance between two nodes. Change if necessary.
+        every state/.style={thick}, % sets the properties for each ’state’ node
+        initial text=$ $, % sets the text that appears on the start arrow
+    }
+    \node[accepting,state] (A)               {$\{0,0,0\}$};
+    \node[state]         (B) [right of=A] {$\{0,1,0\}$};
+    \node[state]         (C) [right of=B] {$\{1,1,0\}$};
+    \node[state]         (D) [below of=C] {$\{0,1,1\}$};
+    \node[state]         (E) [left of=D] {$\{0,0,1\}$};
+
+    \path (A) edge[above]              node {锁闭} (B)
+    (B) edge[above]                node {车辆驶入} (C)
+    (C) edge[right]                node {车辆驶出} (D)
+    (D) edge[below]                node {自动解锁} (E)
+    (B) edge[bend left, below] node {手动解锁} (A)
+    (E) edge[left] node {锁闭} (B);
+\end{tikzpicture}

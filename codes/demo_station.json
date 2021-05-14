@@ -1,0 +1,762 @@
+{
+    "title": "测试站",
+    "nodes": [
+        {
+            "id": 1,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "X3JG",
+            "left_adj": [],
+            "right_adj": [
+                5
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    -600,
+                    0
+                ],
+                [
+                    -500,
+                    0
+                ]
+            ],
+            "joint": [
+                "EMPTY",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 5,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "IAG",
+            "left_adj": [
+                1
+            ],
+            "right_adj": [
+                9
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    -500,
+                    0
+                ],
+                [
+                    -350,
+                    0
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 9,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                5
+            ],
+            "track_id": "5DG",
+            "left_adj": [
+                5
+            ],
+            "right_adj": [
+                11,
+                13
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    -350,
+                    0
+                ],
+                [
+                    -300,
+                    0
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "EMPTY"
+            ]
+        },
+        {
+            "id": 11,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                5
+            ],
+            "track_id": "5DG",
+            "left_adj": [
+                9
+            ],
+            "right_adj": [
+                19
+            ],
+            "conflicted_nodes": [
+                13
+            ],
+            "line": [
+                [
+                    -300,
+                    0
+                ],
+                [
+                    -200,
+                    0
+                ]
+            ],
+            "joint": [
+                "EMPTY",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 19,
+            "node_kind": "MAINLINE",
+            "turnout_id": [],
+            "track_id": "IG",
+            "left_adj": [
+                11
+            ],
+            "right_adj": [
+                12
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    -200,
+                    0
+                ],
+                [
+                    400,
+                    0
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 12,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                2
+            ],
+            "track_id": "2DG",
+            "left_adj": [
+                19
+            ],
+            "right_adj": [
+                10
+            ],
+            "conflicted_nodes": [
+                14
+            ],
+            "line": [
+                [
+                    400,
+                    0
+                ],
+                [
+                    500,
+                    0
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "EMPTY"
+            ]
+        },
+        {
+            "id": 10,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                2
+            ],
+            "track_id": "2DG",
+            "left_adj": [
+                12
+            ],
+            "right_adj": [
+                6
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    500,
+                    0
+                ],
+                [
+                    550,
+                    0
+                ]
+            ],
+            "joint": [
+                "EMPTY",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 6,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "IBG",
+            "left_adj": [
+                10
+            ],
+            "right_adj": [
+                2
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    550,
+                    0
+                ],
+                [
+                    650,
+                    0
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 2,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "X1LQ",
+            "left_adj": [
+                6
+            ],
+            "right_adj": [],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    650,
+                    0
+                ],
+                [
+                    750,
+                    0
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "EMPTY"
+            ]
+        },
+        {
+            "id": 3,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "S1LQ",
+            "left_adj": [],
+            "right_adj": [
+                7
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    -600,
+                    100
+                ],
+                [
+                    -500,
+                    100
+                ]
+            ],
+            "joint": [
+                "EMPTY",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 7,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "7DG",
+            "left_adj": [
+                3
+            ],
+            "right_adj": [
+                17
+            ],
+            "conflicted_nodes": [
+                15
+            ],
+            "line": [
+                [
+                    -500,
+                    100
+                ],
+                [
+                    -200,
+                    100
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "EMPTY"
+            ]
+        },
+        {
+            "id": 17,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "7DG",
+            "left_adj": [
+                7
+            ],
+            "right_adj": [
+                21
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    -200,
+                    100
+                ],
+                [
+                    -100,
+                    100
+                ]
+            ],
+            "joint": [
+                "EMPTY",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 21,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "15DG",
+            "left_adj": [
+                17
+            ],
+            "right_adj": [
+                23
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    -100,
+                    100
+                ],
+                [
+                    0,
+                    100
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 23,
+            "node_kind": "MAINLINE",
+            "turnout_id": [],
+            "track_id": "IIG",
+            "left_adj": [
+                21
+            ],
+            "right_adj": [
+                20
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    0,
+                    100
+                ],
+                [
+                    300,
+                    100
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 20,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "IIG",
+            "left_adj": [
+                23
+            ],
+            "right_adj": [
+                18
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    300,
+                    100
+                ],
+                [
+                    400,
+                    100
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 18,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                4
+            ],
+            "track_id": "4DG",
+            "left_adj": [
+                20
+            ],
+            "right_adj": [
+                8,
+                16
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    400,
+                    100
+                ],
+                [
+                    450,
+                    100
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "EMPTY"
+            ]
+        },
+        {
+            "id": 8,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                4
+            ],
+            "track_id": "4DG",
+            "left_adj": [
+                18
+            ],
+            "right_adj": [
+                4
+            ],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    450,
+                    100
+                ],
+                [
+                    650,
+                    100
+                ]
+            ],
+            "joint": [
+                "EMPTY",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 4,
+            "node_kind": "NORMAL",
+            "turnout_id": [],
+            "track_id": "S3JG",
+            "left_adj": [
+                8
+            ],
+            "right_adj": [],
+            "conflicted_nodes": [],
+            "line": [
+                [
+                    650,
+                    100
+                ],
+                [
+                    750,
+                    100
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "EMPTY"
+            ]
+        },
+        {
+            "id": 13,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                5
+            ],
+            "track_id": "5DG",
+            "left_adj": [
+                9
+            ],
+            "right_adj": [
+                15
+            ],
+            "conflicted_nodes": [
+                11
+            ],
+            "line": [
+                [
+                    -300,
+                    0
+                ],
+                [
+                    -250,
+                    50
+                ]
+            ],
+            "joint": [
+                "EMPTY",
+                "NORMAL"
+            ]
+        },
+        {
+            "id": 15,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                7
+            ],
+            "track_id": "7DG",
+            "left_adj": [
+                13
+            ],
+            "right_adj": [
+                17
+            ],
+            "conflicted_nodes": [
+                7
+            ],
+            "line": [
+                [
+                    -250,
+                    50
+                ],
+                [
+                    -200,
+                    100
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "EMPTY"
+            ]
+        },
+        {
+            "id": 14,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                2
+            ],
+            "track_id": "2DG",
+            "left_adj": [
+                16
+            ],
+            "right_adj": [
+                10
+            ],
+            "conflicted_nodes": [
+                12
+            ],
+            "line": [
+                [
+                    475,
+                    50
+                ],
+                [
+                    500,
+                    0
+                ]
+            ],
+            "joint": [
+                "NORMAL",
+                "EMPTY"
+            ]
+        },
+        {
+            "id": 16,
+            "node_kind": "NORMAL",
+            "turnout_id": [
+                4
+            ],
+            "track_id": "4DG",
+            "left_adj": [
+                18
+            ],
+            "right_adj": [
+                14
+            ],
+            "conflicted_nodes": [
+                8
+            ],
+            "line": [
+                [
+                    450,
+                    100
+                ],
+                [
+                    475,
+                    50
+                ]
+            ],
+            "joint": [
+                "EMPTY",
+                "NORMAL"
+            ]
+        }
+    ],
+    "signals": [
+        {
+            "id": "X",
+            "side": "UPPER",
+            "sgn_kind": "HOME_SIGNAL",
+            "sgn_mnt": "POST_MOUNTING",
+            "protect_node_id": 5,
+            "toward_node_id": 1,
+            "btns": [
+                "TRAIN",
+                "PASS",
+                "GUIDE"
+            ]
+        },
+        {
+            "id": "D7",
+            "side": "UPPER",
+            "sgn_kind": "SHUNTING_SIGNAL",
+            "sgn_mnt": "GROUND_MOUNTING",
+            "protect_node_id": 9,
+            "toward_node_id": 5,
+            "btns": [
+                "SHUNT"
+            ]
+        },
+        {
+            "id": "SI",
+            "side": "UNDER",
+            "sgn_kind": "STARTING_SIGNAL",
+            "sgn_mnt": "GROUND_MOUNTING",
+            "protect_node_id": 11,
+            "toward_node_id": 19,
+            "btns": [
+                "TRAIN",
+                "GUIDE"
+            ]
+        },
+        {
+            "id": "XI",
+            "side": "UPPER",
+            "sgn_kind": "STARTING_SIGNAL",
+            "sgn_mnt": "POST_MOUNTING",
+            "protect_node_id": 12,
+            "toward_node_id": 19,
+            "btns": [
+                "TRAIN",
+                "GUIDE"
+            ]
+        },
+        {
+            "id": "D2",
+            "side": "UNDER",
+            "sgn_kind": "SHUNTING_SIGNAL",
+            "sgn_mnt": "GROUND_MOUNTING",
+            "protect_node_id": 10,
+            "toward_node_id": 6,
+            "btns": [
+                "SHUNT"
+            ]
+        },
+        {
+            "id": "SF",
+            "side": "UPPER",
+            "sgn_kind": "HOME_SIGNAL",
+            "sgn_mnt": "POST_MOUNTING",
+            "protect_node_id": 6,
+            "toward_node_id": 2,
+            "btns": [
+                "TRAIN",
+                "PASS",
+                "GUIDE"
+            ]
+        },
+        {
+            "id": "XF",
+            "side": "UNDER",
+            "sgn_kind": "HOME_SIGNAL",
+            "sgn_mnt": "POST_MOUNTING",
+            "protect_node_id": 7,
+            "toward_node_id": 3,
+            "btns": [
+                "TRAIN",
+                "PASS",
+                "GUIDE"
+            ]
+        },
+        {
+            "id": "D15",
+            "side": "UPPER",
+            "sgn_kind": "SHUNTING_SIGNAL",
+            "sgn_mnt": "GROUND_MOUNTING",
+            "protect_node_id": 21,
+            "toward_node_id": 17,
+            "btns": [
+                "SHUNT"
+            ]
+        },
+        {
+            "id": "XII",
+            "side": "UPPER",
+            "sgn_kind": "STARTING_SIGNAL",
+            "sgn_mnt": "GROUND_MOUNTING",
+            "protect_node_id": 20,
+            "toward_node_id": 23,
+            "btns": [
+                "TRAIN",
+                "GUIDE"
+            ]
+        },
+        {
+            "id": "D4",
+            "side": "UNDER",
+            "sgn_kind": "SHUNTING_SIGNAL",
+            "sgn_mnt": "GROUND_MOUNTING",
+            "protect_node_id": 20,
+            "toward_node_id": 18,
+            "btns": [
+                "SHUNT"
+            ]
+        },
+        {
+            "id": "S",
+            "side": "UNDER",
+            "sgn_kind": "HOME_SIGNAL",
+            "sgn_mnt": "POST_MOUNTING",
+            "protect_node_id": 8,
+            "toward_node_id": 4,
+            "btns": [
+                "TRAIN",
+                "PASS",
+                "GUIDE"
+            ]
+        }
+    ],
+    "independent_btns": []
+}

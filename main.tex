@@ -1,0 +1,49 @@
+\documentclass{hautart}
+
+\hautset{
+    title = 计算机联锁培训系统设计,
+    author = 张睿,
+    gakubu = 电气工程学院,
+    class = 轨道1702,
+    stuid = 201712010311,
+    teacher = 尚庆松,
+    rank = 讲师,
+    engtitle = Design of Computer-based interlocking edutraining system
+}
+\usepackage{appendix}
+
+\begin{document}
+\pagenumbering{Roman}
+\maketitle
+\input{abstract.tex}
+\input{toc.tex}
+\pagenumbering{arabic}
+
+%------------正文部分----------------%
+\input{chapters/chap01.xulun.tex}
+\newpage
+\input{chapters/chap02.need.tex}
+\newpage
+\input{chapters/chap03.architecture.tex}
+\newpage
+\input{chapters/chap04.api.tex}
+\input{chapters/chap04.auth.tex}
+\input{chapters/chap04.executor.tex}
+\newpage
+\input{chapters/chap05.presentation.tex}
+\newpage
+\input{chapters/chap06.database.tex}
+\newpage
+\input{chapters/chap07.test.tex}
+
+%------------结论与致谢----------------%
+\input{chapters/keturon.tex}
+\input{chapters/thanks.tex}
+
+%-------------参考文献----------------%
+\input{ref.tex}
+\appendix
+%------------附录 -------------------%
+\newpage
+\input{appendix/a.tex}
+\end{document}
