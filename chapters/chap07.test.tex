@@ -218,4 +218,64 @@ USER 角色的控制台界面如图\ref{user_ui} 所示，在侧边栏中是可�
 初始化、运行、实例状态从 PRESTART 变为 PLAYING。表现层的网页
 则跳转至实例界面。
 
-% \subsection{实例界面}
+\subsection{实例界面}
+
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/insui.png}
+  \caption{\label{insui}实例UI}
+\end{figure}
+
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/mainlnrecv.png}
+  \caption{\label{mainlnrecv}正线接车进路}
+\end{figure}
+
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/pass.png}
+  \caption{\label{pass}通过进路}
+\end{figure}
+
+图 \ref{creerr} 按照图示顺序点击按钮，刻意建立不存在的进路以达到测试目的。
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/creerr.png}
+  \caption{\label{creerr}建立失败}
+\end{figure}
+
+图 \ref{err} 在没有任何进路的站场上尝试取消进路，以测试去消进路的算法
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/err.png}
+  \caption{\label{err}取消进路错误提示}
+\end{figure}
+
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/shunt.png}
+  \caption{\label{shunt}调车进路}
+\end{figure}
+
+图 \ref{jgred} 表示的是在图 \ref{shunt} 的调车进路建立后，在接近区段放置
+车辆的结果。
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/jgred.png}
+  \caption{\label{jgred}放置车辆}
+\end{figure}
+
+图 \ref{d1sec} 表示车辆驶入第一节点，同时信号机关闭。
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/d1sec.png}
+  \caption{\label{d1sec}车辆驶入第一结点}
+\end{figure}
+
+图\ref{d3sec} 表示车辆从第一结点驶入第二结点，三秒后第一节点解锁。
+\begin{figure}[htbp!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/png/d3sec.png}
+  \caption{\label{d3sec}车辆驶入第二结点}
+\end{figure}
