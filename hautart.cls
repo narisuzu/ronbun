@@ -171,3 +171,5 @@
 
 \RequirePackage{hologo}
 
+\RequirePackage{natbib}
+\setlength{\bibsep}{0pt}

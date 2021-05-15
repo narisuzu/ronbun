@@ -15,11 +15,15 @@
 支持运行时(Runtime)服务的“热插拔”，运行时服务并不会使用网关。
 表现层使用 Node.js 作为 Web 的运行时，使用 React 作为 GUI 框架。
 表现层和接入层、业务逻辑层使用 GraphQL 实现 Schema，使用 HTTP 和 WebSocket 协议通信，
-并使用 actix-web 作为web服务端。
+GraphQL 是 Facebook开发的查询语言框架，其拥有不俗性能的同时解决很多RUSTful api的问题。\cite{hartig2018semantics}
+同时GraphQL和React同为Facebook开发，因而十分适合在React环境中使用GraphQL\cite{taelman2018graphql}。
 
+本案使用 actix-web 作为web服务端。WebSocket是一种网络传输协议，可在单个TCP连接上进行全双工通信，位于OSI模型的应用层。
+WebSocket协议在2011年由IETF标准化为RFC 6455\cite{fette2011websocket}，
+后由RFC 7936补充规范。Web IDL中的WebSocket API由W3C标准化。
 
 \subsection{生命周期与任务调度}
-一个典型的练习实例生命周期由以下几部分组成
+本案的元素围绕实例（instance）构成，一个典型的练习实例生命周期由以下几部分组成
 \begin{enumerate}[\indent i.]
     \item 创建车站
     \item 用户创建练习实例
@@ -39,7 +43,7 @@
 实例初始化后用户就可以在该实例中进行进路车辆的各种操作。
 最后实例会被结束。
 
-在uroj的架构中，runtime服务（后文也称为“执行器”）的作用是实例运行的容器。其提供了
+在uroj的架构中，runtime服务（exexutor提供运行时服务，后文也称为“执行器”）的作用是实例运行的容器。其提供了
 实例运行所需要的环境（如联锁逻辑、车站拓扑关系分析等）一个容器可以同时让多个
 实例在其中运行。因此得名运行时或执行器。正如上表所示，一个车站可以创造无限个实例，
 这也是本设计通用性的一大体现。

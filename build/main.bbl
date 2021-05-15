@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{20}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{#1}
 \expandafter\ifx\csname urlstyle\endcsname\relax\else
@@ -11,10 +11,125 @@
   \let\eprint\href
 \fi
 
+\bibitem[巩芳;(2020)]{intercnki}
+巩芳;.
+\newblock 计算机联锁实训系统建设思考[J].
+\newblock 科技经济导刊, 2020, 28\allowbreak (27): 24-25.
+
+\bibitem[张雨(2019)]{电气化铁路信号计算机联锁实训系统研究与设计}
+张雨.
+\newblock 电气化铁路信号计算机联锁实训系统研究与设计[D].
+\newblock [出版地不详]: 石家庄铁道大学, 2019.
+
+\bibitem[吕永宏\ 等(2007)吕永宏 and 刘红燕]{lyh}
+吕永宏, 刘红燕.
+\newblock 计算机联锁模拟培训系统[J].
+\newblock 铁道通信信号, 2007\allowbreak (12): 21-22.
+
+\bibitem[陈杰;董德存(2003)]{cj}
+陈杰;董德存.
+\newblock 基于仿真技术的铁路计算机联锁培训系统的研究[J].
+\newblock 微型电脑应用, 2003\allowbreak (05): 11-13+2.
+
+\bibitem[Hartig et~al.(2018)Hartig and P{\'e}rez]{hartig2018semantics}
+HARTIG~O, P{\'E}REZ~J.
+\newblock Semantics and complexity of graphql[C]//\allowbreak
+Proceedings of the 2018 World Wide Web Conference.
+\newblock [S.l.: s.n.], 2018: 1155-1164.
+
+\bibitem[Taelman et~al.(2018)Taelman, Vander~Sande, and
+  Verborgh]{taelman2018graphql}
+TAELMAN~R, VANDER~SANDE~M, VERBORGH~R.
+\newblock Graphql-ld: linked data querying with graphql[C]//\allowbreak
+ISWC2018, the 17th International Semantic Web Conference.
+\newblock [S.l.: s.n.], 2018: 1-4.
+
+\bibitem[Fette et~al.(2011)Fette and Melnikov]{fette2011websocket}
+FETTE~I, MELNIKOV~A.
+\newblock The websocket protocol[M].
+\newblock [S.l.]: RFC 6455, December, 2011.
+
+\bibitem[Bray(2014)]{rfc7159}
+BRAY~T.
+\newblock Request for comments: number 7159\quad {The JavaScript Object
+  Notation (JSON) Data Interchange Format}[M/OL].
+\newblock RFC Editor, 2014.
+\newblock \url{https://rfc-editor.org/rfc/rfc7159.txt}.
+\newblock DOI: \doi{10.17487/RFC7159}.
+
+\bibitem[Leach et~al.(2005)Leach, Salz, and Mealling]{rfc4122}
+LEACH~P~J, SALZ~R, MEALLING~M~H.
+\newblock Request for comments: number 4122\quad {A Universally Unique
+  IDentifier (UUID) URN Namespace}[M/OL].
+\newblock RFC Editor, 2005.
+\newblock \url{https://rfc-editor.org/rfc/rfc4122.txt}.
+\newblock DOI: \doi{10.17487/RFC4122}.
+
+\bibitem[Group(2020)]{group2020documentation}
+GROUP~T~P~G~D.
+\newblock Postgresql 13.3 documentation[M/OL].
+\newblock 2020: 170-171, 292.
+\newblock
+  \url{https://www.postgresql.org/files/documentation/pdf/13/postgresql-13-A4.pdf}.
+
+\bibitem[Jones et~al.(2015)Jones, Bradley, and Sakimura]{rfc7519}
+JONES~M, BRADLEY~J, SAKIMURA~N.
+\newblock Request for comments: number 7519\quad {JSON Web Token (JWT)}[M/OL].
+\newblock RFC Editor, 2015.
+\newblock \url{https://rfc-editor.org/rfc/rfc7519.txt}.
+\newblock DOI: \doi{10.17487/RFC7519}.
+
 \bibitem[Provos et~al.(1999)Provos and David]{bycrypto}
 PROVOS~N, DAVID~M.
 \newblock A future-adaptable password scheme[J].
 \newblock Proceedings of 1999 USENIX Annual Technical Conference, 1999:
   81–92.
+
+\bibitem[石擎宇(2014)]{石擎宇2014基于图论的联锁程序的研究与设计}
+石擎宇.
+\newblock 基于图论的联锁程序的研究与设计[D].
+\newblock [出版地不详]: 兰州交通大学, 2014.
+
+\bibitem[徐洪泽(2019)]{车站信号自动控制}
+徐洪泽.
+\newblock 车站信号自动控制[M].
+\newblock 1 版.
+\newblock 北京: 中国铁道出版社, 2019.
+
+\bibitem[Casario et~al.(2011)Casario, Elst, Brown, Wormser, and
+  Hanquez]{casario2011html5}
+CASARIO~M, ELST~P, BROWN~C, et~al.
+\newblock Html5 local storage[M]//\allowbreak
+HTML5 Solutions: Essential Techniques for HTML5 Developers.
+\newblock [S.l.]: Springer, 2011: 281-303.
+
+\bibitem[jonobr1(2020)]{twojs}
+JONOBR1.
+\newblock the two.js documentation[EB/OL].
+\newblock 2020.
+\newblock \url{https://two.js.org/#documentation}.
+
+\bibitem[Mozilla(2021)]{setinterval}
+MOZILLA.
+\newblock Mdn web docs[EB/OL].
+\newblock 2021.
+\newblock
+  \url{https://developer.mozilla.org/zh-CN/docs/Web/API/WindowOrWorkerGlobalScope/setInterval}.
+
+\bibitem[{徐中伟，梅萌，崔新民，师秀霞，黄翌虹，莫运前，韩安平}(2019)]{interlock2019}
+{徐中伟，梅萌，崔新民，师秀霞，黄翌虹，莫运前，韩安平}.
+\newblock 计算机联锁系统人机接口标准（讨论稿）[R].
+\newblock [出版地不详: 出版者不详], 2019: 21.
+
+\bibitem[Subramanian(2019)]{subramanian2019react}
+SUBRAMANIAN~V.
+\newblock React router[M]//\allowbreak
+Pro MERN Stack.
+\newblock [S.l.]: Springer, 2019: 233-265.
+
+\bibitem[Zhong-ke(2005)]{zhong2005database}
+ZHONG-KE~X.
+\newblock Database connection pool technology and its application [j][J].
+\newblock Journal of Hunan Light Industry College, 2005, 2.
 
 \end{thebibliography}

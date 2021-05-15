@@ -141,14 +141,14 @@ CREATE TABLE users (
 
 \begin{lstlisting}
 CREATE TABLE stations (
-    id          serial        primary key,
-    title       varchar(250)  not null,
-    description text,
-    created_at  timestamp     not null default now(),
-    updated_at  timestamp     not null default now(),
-    draft       boolean       not null default 'f',
-    author_id varchar(30) references users(id) on delete set null,
-    yaml        text          not null
+  id          serial        primary key,
+  title       varchar(250)  not null,
+  description text,
+  created_at  timestamp     not null default now(),
+  updated_at  timestamp     not null default now(),
+  draft       boolean       not null default 'f',
+  author_id varchar(30) references users(id) on delete set null,
+  yaml        text          not null
 )
 \end{lstlisting}
 解释：
@@ -202,7 +202,7 @@ CREATE TABLE instances (
 \end{lstlisting}
 解释：
 \begin{itemize}
-    \item 主键为id, 类型是uuid
+    \item 主键为id, 类型是uuid\cite{group2020documentation}
     \item title 为实例标题
     \item curr\_state 表示实例当前的状态
     \item creator\_id 是表 users 的外键，表示创建者
@@ -276,7 +276,7 @@ struct，一个是读取用一个是插入用，但需要derive diesel提供的�
 连接池（英语：connection pool）是维护的数据库连接的缓存，
 以便在将来需要对数据库发出请求时可以重用连接。
 每次需要再打开一个新的数据库连接都是低效的，而且在高流量条件下会导致资源耗尽。
-可以使用连接池解决这个问题以提高在数据库上执行命令的性能。
+可以使用连接池解决这个问题以提高在数据库上执行命令的性能\cite{zhong2005database}。
 为每个用户打开和维护数据库连接，尤其是对动态数据库驱动的网站应用程序发出的请求，
 既昂贵又浪费资源。在连接池中，创建连接之后，将连接放在池中并再次使用，这样就不必创建新的连接。
 如果所有连接都正在使用，则创建一个新连接并将其添加到池中。
@@ -293,10 +293,11 @@ use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::{pg::PgConnection, r2d2::PooledConnection};
 
 pub type PgPool = Pool<ConnectionManager<PgConnection>>;
-pub type Conn = PooledConnection<ConnectionManager<PgConnection>>;
+pub type Conn =
+         PooledConnection<ConnectionManager<PgConnection>>;
 
 pub fn create_connection_pool() -> PgPool {
-    let url = env::var("DATABASE_URL").expect("Can't get DB URL");
+    let url = env::var("DB_URL").expect("Can't get DB URL");
     let manager = ConnectionManager::<PgConnection>::new(url);
     Pool::builder()
         .build(manager)
