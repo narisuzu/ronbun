@@ -114,9 +114,9 @@ const segment = two.makeLine(x1, y1, x2, y2)
 渲染绝缘节的关键在于将一定长度的旋转一定的角度使其与线段正交。
 
 \begin{figure}[ht]
-    \centering
-    \input{figures/node.tex}
-    \caption{\label{node}绝缘节渲染}
+  \centering
+  \input{figures/node.tex}
+  \caption{\label{node}绝缘节渲染}
 \end{figure}
 
 以普通绝缘节举例，如图\ref{node} ，设$O$点为原点，假设$OO'$是轨道结点的线段，$AB$是绝缘节。
@@ -137,15 +137,15 @@ $\displaystyle y = \mp \frac{al}{2\sqrt{a^2+b^2}}$。
 在二维的信号平面图上，信号机的方向也是需要考虑的。综合以上考量、表 \ref{sgn_data} 所
 载属性是必要的。信号机绘图遵循下列步骤
 \begin{enumerate}[\indent i.]
-    \item 若信号机在上侧则设定基线长度为-10，否则为10 （因为Two.js的坐标系是左手系，$y$轴正向朝下）
-    \item 从零点到向下2个基线长度绘制信号机底座
-    \item 若信号机朝左则设定灯$x$轴为灯半径，朝右则为负半径
-    \item 若信号机朝左则设柱高为10，朝右则为-10
-    \item 若信号机为高柱则自底座的终点至$x$为柱高的点绘制柱子
-    \item 将灯$x$轴加上一个柱高
-    \item 在基线$y$、灯$x$处以灯半径绘制第一个灯
-    \item 若信号机类型为进站或出站信号机则在基线y、灯$x$加二倍半径处绘制第二个灯
-    \item 若定义了信号所属结点，则使用绝缘节渲染类似的算法将信号机旋转至和结点线段平行
+  \item 若信号机在上侧则设定基线长度为-10，否则为10 （因为Two.js的坐标系是左手系，$y$轴正向朝下）
+  \item 从零点到向下2个基线长度绘制信号机底座
+  \item 若信号机朝左则设定灯$x$轴为灯半径，朝右则为负半径
+  \item 若信号机朝左则设柱高为10，朝右则为-10
+  \item 若信号机为高柱则自底座的终点至$x$为柱高的点绘制柱子
+  \item 将灯$x$轴加上一个柱高
+  \item 在基线$y$、灯$x$处以灯半径绘制第一个灯
+  \item 若信号机类型为进站或出站信号机则在基线y、灯$x$加二倍半径处绘制第二个灯
+  \item 若定义了信号所属结点，则使用绝缘节渲染类似的算法将信号机旋转至和结点线段平行
 \end{enumerate}
 
 信号机绘图完成后，还需要对信号机的按钮进行绘图：遍历信号机的按钮数组（如表\ref{sgn_data}所载）
@@ -202,40 +202,40 @@ const btns = [
 其中结点状态循表\ref{node_render}，信号机状态循表\ref{signal_render}。
 
 \begin{table}
-    \centering
-    \caption{\label{node_render} 结点状态渲染}
-    \begin{tabular}{lc}
-        \toprule
-        状态       & 颜色(HEX)           \\
-        \midrule
-        Lock       & {\ttfamily\#ffffff} \\
-        Occupied   & {\ttfamily\#ff0000} \\
-        Vacant     & {\ttfamily\#00ffff} \\
-        Unexpected & 黄色条纹            \\
-        \bottomrule
-    \end{tabular}
+  \centering
+  \caption{\label{node_render} 结点状态渲染}
+  \begin{tabular}{lc}
+    \toprule
+    状态       & 颜色(HEX)           \\
+    \midrule
+    Lock       & {\ttfamily\#ffffff} \\
+    Occupied   & {\ttfamily\#ff0000} \\
+    Vacant     & {\ttfamily\#00ffff} \\
+    Unexpected & 黄色条纹            \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 \begin{table}
-    \centering
-    \caption{\label{signal_render} 结点状态渲染}
-    \begin{tabular}{lcc}
-        \toprule
-        状态 & 灯一(HEX)           & 灯二(HEX)                            \\
-        \midrule
-        L    & {\ttfamily\#00ff00} & 无灯                                 \\
-        U    & {\ttfamily\#ffff00} & 无灯                                 \\
-        H    & {\ttfamily\#ff0000} & 无灯                                 \\
-        B    & {\ttfamily\#ffffff} & 无灯                                 \\
-        A    & {\ttfamily\#00ffff} & 无灯                                 \\
-        UU   & {\ttfamily\#ffff00} & {\ttfamily\#ffff00}                  \\
-        LU   & {\ttfamily\#ffff00} & {\ttfamily\#00ff00}                  \\
-        LL   & {\ttfamily\#00ff00} & {\ttfamily\#00ff00}                  \\
-        US   & {\ttfamily\#ffff00} & {\ttfamily\#ffff00 \& \#000000} 交替 \\
-        HB   & {\ttfamily\#ff0000} & {\ttfamily\#ffffff}                  \\
-        OFF  & {\ttfamily\#000000} & {\ttfamily\#000000} （若有灯）       \\
-        \bottomrule
-    \end{tabular}
+  \centering
+  \caption{\label{signal_render} 结点状态渲染}
+  \begin{tabular}{lcc}
+    \toprule
+    状态 & 灯一(HEX)           & 灯二(HEX)                            \\
+    \midrule
+    L    & {\ttfamily\#00ff00} & 无灯                                 \\
+    U    & {\ttfamily\#ffff00} & 无灯                                 \\
+    H    & {\ttfamily\#ff0000} & 无灯                                 \\
+    B    & {\ttfamily\#ffffff} & 无灯                                 \\
+    A    & {\ttfamily\#00ffff} & 无灯                                 \\
+    UU   & {\ttfamily\#ffff00} & {\ttfamily\#ffff00}                  \\
+    LU   & {\ttfamily\#ffff00} & {\ttfamily\#00ff00}                  \\
+    LL   & {\ttfamily\#00ff00} & {\ttfamily\#00ff00}                  \\
+    US   & {\ttfamily\#ffff00} & {\ttfamily\#ffff00 \& \#000000} 交替 \\
+    HB   & {\ttfamily\#ff0000} & {\ttfamily\#ffffff}                  \\
+    OFF  & {\ttfamily\#000000} & {\ttfamily\#000000} （若有灯）       \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 \subsubsection{状态更新}
