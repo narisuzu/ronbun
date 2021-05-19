@@ -4,7 +4,7 @@
 API服务主要负责耦合data层和view层，上承用户的请求，下接数据库，从数据库读写数据并呈递给前端。
 在本案中，API服务提供车站、实例、考试、用户和班级四个类型的服务。
 在api服务中，Station 数据是最完备最上游的车站静态数据，其直接来源于用户的输入。Station 数据
-直接来源于车站描述文件
+直接来源于车站描述文件。
 
 \subsubsection{车站}
 
@@ -93,15 +93,16 @@ API服务主要负责耦合data层和view层，上承用户的请求，下接数
 车站描述文件用于描述车站，即使用上述属性来定义一个车站，
 车站描述文件作为用户向本系统的输入，是用户唯一定义车站的方式，因此，
 为兼顾可读性和文件体积需求，本案采用json作为车站的描述语言。
-JSON（JavaScript Object Notation）是一种由道格拉斯·克罗克福特构想和设计、轻量级的资料交换语言，
-该语言以易于让人阅读的文字为基础，用来传输由属性值或者序列性的值组成的数据对象。
-尽管JSON是JavaScript的一个子集，但JSON是独立于语言的文本格式，并且采用了类似于C语言家族的一些习惯\cite{rfc7159}。
+JSON（JavaScript Object Notation）是一种轻量级的数据交换格式。
+它便于人类阅读和书写。对于机器来说，它很容易解析和生成。它是基于JavaScript编程语言标准ECMA-262第三版-1999年12月的一个子集。
+JSON是一种完全独立于语言的文本格式，但使用C语族的程序员所熟悉的约定，包括C、C++、C\#、Java、JavaScript、Perl、Python和许多其他语言。
+这些特性使JSON成为理想的数据交换语言。\cite{rfc7159}。
 
 车站描述文件将在Executor中被解析成实例，与此相关的细节参见第七章。前文曾道
 “基本上，一个车站是由数个Signal和数个Node构成的”，但车站描述文件中除了信号机和节点的定义之外，还有另外两个字段
 其一是车站的标题，一般为站名，另一为独立按钮，譬如咽喉区设置的列车终端按钮LZA，这种按钮是不依附于信号机的，
 因此需要单独定义，包括按钮的id，位置和其映射的节点。
-这里给出一个非典型的车站描述文件作为例子并在注释中说明上述内容
+这里给出一个非典型的车站描述文件作为例子并在注释中说明上述内容。
 \lstinputlisting{codes/test.json}
 显然上述文件中定义了一个站线节点、一架进站信号机、一架出站兼调车信号机。
 
@@ -116,10 +117,10 @@ JSON（JavaScript Object Notation）是一种由道格拉斯·克罗克福特构
     \begin{threeparttable}
         \begin{tabular}{lc}
             \toprule
-            属性            & 解释         \\
+            属性            & 含义         \\
             \midrule
             title           & 标题         \\
-            description$^*$ & 注释         \\
+            description$^*$ & 说明         \\
             draft           & 是否草稿     \\
             yaml            & 车站描述文件 \\
             \bottomrule
@@ -131,7 +132,7 @@ JSON（JavaScript Object Notation）是一种由道格拉斯·克罗克福特构
     \end{threeparttable}
 \end{table}
 
-\paragraph{}获得车站：
+\paragraph{}获得车站
 
 获得车站是通过查询数据库，使用户取得车站信息的过程。
 当表现层调用api服务 Query 中的 station 方法时，该方法会通过用户输入的station id在数据库中查找车站

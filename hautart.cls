@@ -26,6 +26,8 @@
 \setlength{\absleftindent}{0pt}
 \setlength{\absrightindent}{0pt}
 
+\setmainfont{Times New Roman}
+
 \setCJKfamilyfont{hyfsc}{HYCuFangSongJ}             %使用STXingkai华文行楷字体
 \newcommand{\fangsongbd}{\CJKfamily{hyfsc}}
 
@@ -162,11 +164,11 @@
 
 %谢谢
 \newenvironment{keturon}
-               {\newpage\twolines\section*{\centerline{\heiti 结\quad 论}\oneline}}
+               {\newpage\null\section*{\centerline{\heiti 结\quad 论}}}
                {\addcontentsline{toc}{section}{结论}}
 
 \newenvironment{arigatou}
-               {\newpage\twolines\section*{\centerline{\heiti 致\quad 谢}\oneline}}
+               {\newpage\null\section*{\centerline{\heiti 致\quad 谢}}}
                {\addcontentsline{toc}{section}{致谢}}
 
 \RequirePackage{hologo}

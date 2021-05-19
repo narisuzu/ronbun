@@ -1,11 +1,15 @@
 \subsection{Auth服务}
 本案设管理员和用户两种用户身份，不同的服务需要响应的权限才能运行
 \subsubsection{JWT}
-JSON Web Token(JWT)是一个开放标准，用于创建具有可选的签名和/或可选的加密的数据，
-其载荷持有JSON。token 使用私人秘密或公共/私人密钥进行签名\cite{rfc7519}。服务器可以生成一个包含用户身份和用户id的token，
-并将其提供给客户端。然后，客户端可以使用该token来证明其身份。
+JSON Web Token（简称JWT）是一个开放标准（RFC 7519）\cite{rfc7519}，
+它定义了一种紧凑和独立的方式以JSON对象的形式在各方之间安全地传输信息。
+这种信息可以被验证和信任，因为它是经过数字签名的。
+JWT可以使用secret（使用HMAC算法）或使用RSA或ECDSA的公共/私人密钥对进行签名。
 
-本案的 uroj-common crate 中封装了JWT相关的函数，其claim定义为
+服务器可以生成一个包含用户身份和用户id的token并将其提供给客户端。
+客户端可以使用该token来证明其身份。
+
+本案的 uroj-common crate 中封装了JWT相关的函数，其claim定义为：
 \begin{lstlisting}
 pub struct Claims {
     pub sub: String,
@@ -55,9 +59,10 @@ role是用户身份，当用户登入时，生成一个claim并将其编码成to
 api服务得到用户输入后，会使用bcrypte算法加密用户输入的password。并将用户信息和加密后的密码插入
 数据库的users表中。
 
-关于bcrypte：bcrypt是一个由Niels Provos以及David Mazières根据Blowfish加密算法所设计的密码散列函数，
-于1999年在USENIX中展示\cite{bycrypto}。本案中bcrypt会使用一个加盐的流程以防御彩虹表攻击，同时bcrypt还是适应性函数，
-它可以借由增加迭代之次数来抵御日益增进的电脑运算能力透过暴力法破解。本案中使用 12 次迭代。
+关于bcrypte：
+bcrypt是由Niels Provos和David Mazières设计的密码加密函数，基于Blowfish密码，
+于1999年在USENIX上发表。\cite{bycrypto} 除了加入盐来防止彩虹表攻击，同时还是一个自适应函数：
+随着时间的推移，迭代次数可以增加，使其更慢，所以即使计算能力增加，它仍然可以抵抗暴力搜索攻击。本案中使用 12 次迭代。
 
 \paragraph{}注册
 
