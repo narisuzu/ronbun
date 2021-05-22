@@ -470,7 +470,7 @@ Instance 表中，那么在实例所指定的运行时 上，就可以运行该�
 取消进路的方向，和用户欲取消进路的起点。这是因为对于起点来说，不论建立哪种进路，
 起点总是始端信号机的防护结点，始端方向总是始端信号机的反向。因此有以下算法：
 
-\begin{enumerate}[\indent i.]
+\begin{enumerate}
     \item 初始化一个vector，压入起点
     \item 找到R有向图中从该vector顶部结点出发且符合指定进路方向的第一条边
     \item 如果该边的终点锁闭且空闲，则压入该终点至vector中，并跳转至2
@@ -528,7 +528,7 @@ uroj采用始端信号机状态约束来解决这一点，如果用户输入的�
 
 判断完成后，将列车驶入靶点，有如下几步：
 
-\begin{enumerate}[\indent i.]
+\begin{enumerate}
     \item 将靶点状态对象的状态置为 Occupied
     \item 将今点状态对象的状态置为 Vacant
     \item 将今点状态对象的曾占用标记置为 true

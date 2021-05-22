@@ -82,7 +82,8 @@
   stuid/.store in=\hautstuid,
   teacher/.store in=\hautteacher,
   rank/.store in=\hautrank,
-  engtitle/.store in=\hautengtitle
+  engtitle/.store in=\hautengtitle,
+  date/.store in=\hautdate
 }
 
 \NewDocumentCommand\hautset{m} {
@@ -137,7 +138,7 @@
         \\
         \renewcommand{\arraystretch}{1}
         \vspace{60pt}
-        \@date
+        \hautdate
       }\\
 
         
@@ -159,16 +160,19 @@
 \numberwithin{figure}{section}
 \numberwithin{table}{section}
 
-\RequirePackage{enumerate}
+\RequirePackage{enumitem}
+\setlist{nosep}
+\setlist[enumerate]{label*=\alph*.}
+
 \RequirePackage{gbt7714}
 
 %谢谢
 \newenvironment{keturon}
-               {\newpage\null\section*{\centerline{\heiti 结\quad 论}}}
+               {\clearpage\null\section*{\centerline{\heiti 结\quad 论}}}
                {\addcontentsline{toc}{section}{结论}}
 
 \newenvironment{arigatou}
-               {\newpage\null\section*{\centerline{\heiti 致\quad 谢}}}
+               {\clearpage\null\section*{\centerline{\heiti 致\quad 谢}}}
                {\addcontentsline{toc}{section}{致谢}}
 
 \RequirePackage{hologo}

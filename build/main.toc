@@ -63,7 +63,7 @@
 \contentsline {subsubsection}{\numberline {4.3.11}调/列车辆}{28}{}%
 \contentsline {paragraph}{\numberline {(1)}}{28}{}%
 \contentsline {paragraph}{\numberline {(2)}}{28}{}%
-\contentsline {subsubsection}{\numberline {4.3.12}状态共享}{30}{}%
+\contentsline {subsubsection}{\numberline {4.3.12}状态共享}{28}{}%
 \contentsline {subsection}{\numberline {4.4}性能优化}{30}{}%
 \contentsline {subsubsection}{\numberline {4.4.1}分布式SOA}{30}{}%
 \contentsline {subsubsection}{\numberline {4.4.2}优化查询}{30}{}%
@@ -89,9 +89,9 @@
 \contentsline {paragraph}{\numberline {(3)}}{36}{}%
 \contentsline {paragraph}{\numberline {(4)}}{36}{}%
 \contentsline {paragraph}{\numberline {(5)}}{36}{}%
-\contentsline {paragraph}{\numberline {(6)}}{37}{}%
-\contentsline {subsubsection}{\numberline {5.2.3}状态更新}{37}{}%
-\contentsline {paragraph}{\numberline {(1)}}{37}{}%
+\contentsline {paragraph}{\numberline {(6)}}{36}{}%
+\contentsline {subsubsection}{\numberline {5.2.3}状态更新}{38}{}%
+\contentsline {paragraph}{\numberline {(1)}}{38}{}%
 \contentsline {paragraph}{\numberline {(2)}}{38}{}%
 \contentsline {subsection}{\numberline {5.3}路由}{38}{}%
 \contentsline {section}{\numberline {6}数据与网络}{40}{}%
@@ -103,12 +103,12 @@
 \contentsline {paragraph}{\numberline {(2)}用}{42}{}%
 \contentsline {paragraph}{\numberline {(3)}车}{44}{}%
 \contentsline {paragraph}{\numberline {(4)}执}{44}{}%
-\contentsline {paragraph}{\numberline {(5)}考}{45}{}%
+\contentsline {paragraph}{\numberline {(5)}考}{44}{}%
 \contentsline {paragraph}{\numberline {(6)}实}{45}{}%
-\contentsline {paragraph}{\numberline {(7)}问}{46}{}%
+\contentsline {paragraph}{\numberline {(7)}问}{45}{}%
 \contentsline {paragraph}{\numberline {(8)}实}{46}{}%
-\contentsline {subsection}{\numberline {6.3}持久层}{47}{}%
-\contentsline {subsubsection}{\numberline {6.3.1}ORM}{47}{}%
+\contentsline {subsection}{\numberline {6.3}持久层}{46}{}%
+\contentsline {subsubsection}{\numberline {6.3.1}ORM}{46}{}%
 \contentsline {subsubsection}{\numberline {6.3.2}连接池}{47}{}%
 \contentsline {subsubsection}{\numberline {6.3.3}时区处理}{48}{}%
 \contentsline {section}{\numberline {7}测试}{49}{}%
@@ -116,9 +116,9 @@
 \contentsline {subsubsection}{\numberline {7.1.1}获取车站布局测试}{49}{}%
 \contentsline {subsection}{\numberline {7.2}控制台界面}{51}{}%
 \contentsline {subsection}{\numberline {7.3}实例界面}{59}{}%
-\contentsline {paragraph}{\numberline {(1)}}{62}{}%
-\contentsline {paragraph}{\numberline {(2)}}{63}{}%
-\contentsline {section}{结论}{63}{}%
-\contentsline {section}{致谢}{64}{}%
-\contentsline {section}{参考文献}{66}{}%
-\contentsline {section}{\numberline {附录A}相关代码}{67}{}%
+\contentsline {paragraph}{\numberline {(1)}}{63}{}%
+\contentsline {paragraph}{\numberline {(2)}}{64}{}%
+\contentsline {section}{结论}{64}{}%
+\contentsline {section}{致谢}{65}{}%
+\contentsline {section}{参考文献}{67}{}%
+\contentsline {section}{\numberline {附录A}相关代码}{68}{}%
