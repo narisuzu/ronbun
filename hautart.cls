@@ -7,7 +7,7 @@
 \pagestyle{plain}
 
 \RequirePackage{leading}
-\newcommand{\twolines}{\vspace*{35.5pt}}
+\newcommand{\twolines}{~\\}
 \newcommand{\oneline}{\vspace*{24pt}}
 \newcommand{\halfline}{\vspace*{9pt}}
 
@@ -45,13 +45,17 @@
     contentsname = {\large\centerline{目\quad 次}}, 
     tocdepth = 2,
     section = {
-        format = \large\bfseries\sffamily
+        format = \large\bfseries\sffamily,
     },
     subsection = {
-        format = \zihao{4}\bfseries\sffamily
+        format = \zihao{4}\bfseries\sffamily,
+        beforeskip = 1.2ex,
+        afterskip = 1.2ex
     },
     subsubsection = {
-        format = \normalsize\sffamily
+        format = \normalsize\sffamily,
+        beforeskip = 0ex,
+        afterskip = 0ex
     },
     paragraph = {
       indent = \parindent,
@@ -59,7 +63,7 @@
       number = \arabic{paragraph},
       format = \normalsize,
       beforeskip = 0ex,
-      afterskip = 0em
+      afterskip = 0ex
     },
     appendix = {
       number = 附录\Alph{section}

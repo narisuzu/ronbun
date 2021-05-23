@@ -1,5 +1,5 @@
 {
-    "title": "测试站",
+    "title": "演示站",
     "nodes": [
         {
             "id": 1,
@@ -180,7 +180,8 @@
             ],
             "track_id": "2DG",
             "left_adj": [
-                12
+                12,
+                14
             ],
             "right_adj": [
                 6
@@ -719,6 +720,18 @@
             "toward_node_id": 17,
             "btns": [
                 "SHUNT"
+            ]
+        },
+        {
+            "id": "SII",
+            "side": "UNDER",
+            "sgn_kind": "STARTING_SIGNAL",
+            "sgn_mnt": "POST_MOUNTING",
+            "protect_node_id": 21,
+            "toward_node_id": 23,
+            "btns": [
+                "TRAIN",
+                "GUIDE"
             ]
         },
         {
